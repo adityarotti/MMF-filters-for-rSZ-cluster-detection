@@ -15,7 +15,7 @@ datapath="/global/cscratch1/sd/raditya/PICO/CMB_PROBE_2017/"
 datapathout="/global/cscratch1/sd/raditya/PICO/reduced_data/"
 ensure_dir(datapathout)
 
-for ch in pico_channels:
+for ch in pico_channels[pico_channels>62.]:
 	# Noise
 	filename=datapath + str(int(ch))+"GHz/" + "group13_map_" + str(int(ch))+"GHz.fits"
 	tempmap=h.read_map(filename,verbose=False)
