@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import healpy as h
+from astropy.io import fits
 from settings import mmf_settings as mmfset
 from flat_sky_codes import tangent_plane_analysis as tpa
 
