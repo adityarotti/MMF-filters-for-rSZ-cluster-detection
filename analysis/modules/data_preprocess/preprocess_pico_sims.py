@@ -4,7 +4,7 @@ import healpy as h
 from astropy.io import fits
 from settings import mmf_settings as mmfset
 from flat_sky_codes import tangent_plane_analysis as tpa
-
+import unit_conv as uc
 
 def get_reduced_pico_sims():
 	for ch in mmfset.channels:
@@ -49,15 +49,16 @@ def extract_tangent_planes(numplanes=100,minlat=20.,nsideout=8,seed=0,dryrun=Fal
 	if dryrun:
 		for mtype in mmfset.map_fnames.keys():
 			for ich, ch in enumerate(mmfset.channels):
-				print mmfset.map_fnames[mtype][ch]
+				#print mmfset.map_fnames[mtype][ch]
+				print ch,uc.conv_uKTRJ_KTBB(ch)
 				for ipix,pix in enumerate(rpixels):
 					filename=mmfset.paths["tplanes"] + mtype + "_pico_sim_tplane_" + str(ipix) + ".fits"
-					print filename
+					#print filename
 	else:
 		for mtype in mmfset.map_fnames.keys():
 			for ich, ch in enumerate(mmfset.channels):
 				#print mmfset.map_fnames[mtype][ch]
-				chmap=h.read_map(mmfset.map_fnames[mtype][ch],0,verbose=False) #/mmfset.conv_KCMB2MJY[ch]
+				chmap=h.read_map(mmfset.map_fnames[mtype][ch],0,verbose=False)*uc.conv_uKTRJ_KTBB(ch)
 				for ipix,pix in enumerate(rpixels):
 					filename=mmfset.paths["tplanes"] + mtype + "_pico_sim_tplane_" + str(ipix) + ".fits"
 					projop=tpa.tangent_plane_setup(mmfset.nside,mmfset.xsize,glat[ipix],glon[ipix],rescale=1.)

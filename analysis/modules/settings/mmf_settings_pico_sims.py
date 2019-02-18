@@ -14,16 +14,17 @@ npix=projection_operator.npix
 mask_planck_maps=True
 mask_tangent_planes=True
 
-paths["templates"]="../data/template_bank/" + str(int(xsize)) + "deg_patches/"
-paths["tplanes"]="../data/tangent_planes/pico_sims/" + str(int(xsize)) + "deg_patches/"
-paths["result_data"]="../results/pico_sims/" + str(int(xsize)) + "deg_patches/data/"
-paths["result_figs"]="../results/pico_sims/" + str(int(xsize)) + "deg_patches/figs/"
+projdir="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/pico_rsz/"
+paths["templates"]= projdir + "/data/template_bank/" + str(int(xsize)) + "deg_patches/"
+paths["tplanes"]=projdir + "/data/tangent_planes/pico_sims/" + str(int(xsize)) + "deg_patches/"
+paths["result_data"]=projdir + "/results/pico_sims/" + str(int(xsize)) + "deg_patches/data/"
+paths["result_figs"]=projdir + "/results/pico_sims/" + str(int(xsize)) + "deg_patches/figs/"
 
 def init():
-	for key in paths.keys():
-		ensure_dir(paths[key])
+#	for key in paths.keys():
+#		ensure_dir(paths[key])
 #	ensure_dir(paths["templates"])
-#	ensure_dir(paths["tplanes"])
+	ensure_dir(paths["tplanes"])
 #	ensure_dir(paths["result_data"])
 #	ensure_dir(paths["result_figs"])
 #	ensure_dir(paths["result_figs_dump"])
