@@ -1,0 +1,22 @@
+##########################################################################################
+#
+# SZ signal computed with SZpack v1.1.1
+# Runmode: CNSN-basis
+#
+# General parameters:
+# xmin= 0.1 xmax= 30 np= 400
+# Dtau= 0.01
+# Te= 1keV (The ~ 0.00195695)
+# betac= 0 muc= 1
+# betao= 0 muo= 1
+#
+# Runmode specific parameters:
+# eps= 0
+# Te_order= 20 beta_order= 2
+#
+##########################################################################################
+#
+# Output format: x = (h nu/k T0) | x^3 Dn(x) | DI(x) in MJy/sr 
+# Here a CMB temperature of T0 = 2.726 K is assumed.
+#
+##########################################################################################
