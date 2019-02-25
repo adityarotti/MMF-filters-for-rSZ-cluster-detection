@@ -8,7 +8,9 @@ import sympy as sp
 from astropy.io import fits
 from scipy.interpolate import interp1d
 from scipy.interpolate import interp2d
+from settings import constants as cnst
 from settings import mmf_settings as mmfset
+import sz_spec as szspec
 
 class band_pass_filtering(object):
 
@@ -24,33 +26,11 @@ class band_pass_filtering(object):
 			self.szspecpath=szspecpath
 		self.plbp={}
 		self.channels=np.array(channels)
-		
-		# Defining the necessary constants
-		self.T_cmb=2.726
-		self.h=6.62607004e-34
-		self.k=1.38064852e-23
-		self.c=299792458. # m/s
-		self.wn2hz=1e-7*self.c
-		
-		self.setup_bb_fns()
+		self.wn2hz=1e-7*cnst.c_sol
+		self.sz_op=szspec.sz_spectrum(szspecpath=self.szspecpath)
+		self.conv_I2Tcmb=self.sz_op.fn["bb_diffT"](self.channels)
 		self.return_band_pass()
-		self.setup_num_sz_spec()
-
-	def setup_bb_fns(self):
-		nu,T,c0,c1=sp.symbols("nu T c0 c1")
-		self.fn_symb={}
-		self.fn_symb["bb"]=c0*(nu**3.)/(sp.exp(c1*nu/T)-1.)
-		self.fn_symb["bb_diffT"]=self.fn_symb["bb"].diff(T,1)
-		self.fn_symb["SZ"]=self.T_cmb*self.fn_symb["bb_diffT"]*(((c1*(nu/T))*(sp.exp(c1*(nu/T))+1.)/(sp.exp(c1*(nu/T))-1.))-4.)
-		
-		self.fntype=self.fn_symb.keys()
-		self.fn={}
-		for ft in self.fntype:
-			tempfn=self.fn_symb[ft].subs(c0,(2.*self.h/(self.c**2.)))
-			tempfn=tempfn.subs(c1,(self.h/self.k))
-			tempfn=tempfn.subs(nu,nu*1e9)
-			tempfn=tempfn.subs(T,self.T_cmb)
-			self.fn[ft]=sp.lambdify([nu],tempfn,modules="numpy")
+		self.setup_bp_fn_sz_2d_T()
 
 	def return_band_pass(self,thr=1.e-6):
 		hfi_im=fits.open(self.datapath + "/HFI_RIMO_R2.00.fits")
@@ -78,50 +58,26 @@ class band_pass_filtering(object):
 			rf=np.linspace(min(plbp_raw[ch][0]),max(plbp_raw[ch][0]),100*len(plbp_raw[ch][0]))
 			self.plbp[ch]=[rf,fn(rf)]
 
-	def setup_num_sz_spec(self,intkind="quintic"):
-		T_cmb_SZpack=self.T_cmb #2.726 ; print T_cmb_SZpack
-		filename=self.szspecpath + "/SZ_CNSN_basis_2KeV.dat"
-		data=np.loadtxt(filename)
-		self.sz_nu=data[:,0]*self.k*T_cmb_SZpack/self.h/1e9
-		
-		self.YTe=np.zeros((np.size(self.sz_nu),50),float)
-	
-		# Evaluating the 0KeV case
-		self.T=[0]
-		self.YTe[:,0]=self.fn["SZ"](self.sz_nu)
-		
-		# Remember that 1KeV file is missing.
-		for i in range(49):
-			Temperature=i+2 # KeV
-			self.T=np.append(self.T,Temperature)
-			norm=1e4*0.01*Temperature/511.
-			filename=self.szspecpath + "/SZ_CNSN_basis_" + str(Temperature) + "KeV.dat"
-			data=np.loadtxt(filename)
-			self.YTe[:,i+1]=data[:,2]*((self.T_cmb/T_cmb_SZpack)**4.)/norm/1.e16
-		
-		self.fn_sz_2d=interp2d(self.T,self.sz_nu,self.YTe,kind=intkind,bounds_error=False,fill_value=0.)
-		
-	def fn_sz_2d_bp(self,T=0.):
-		do_flatten=False
-		if not isinstance(T,(list,np.ndarray)):
-			T=[T]
-			do_flatten=True
-		bp_ysz=np.zeros((np.size(T),np.size(self.channels)),float)
-		for j,temp in enumerate(T):
-			for i,ch in enumerate(self.channels):
-				bp_ysz[j,i]=np.sum(self.plbp[ch][1]*self.fn_sz_2d(temp,self.plbp[ch][0]).flatten())
-				bp_ysz[j,i]=bp_ysz[j,i]/np.sum(self.plbp[ch][1]*self.fn["bb_diffT"](self.plbp[ch][0]))
-		if do_flatten:
-			bp_ysz=bp_ysz.flatten()
-		return np.transpose(bp_ysz) # So that the return format is same as fn_sz_2d
-
-	def write_sz_spec(self,T=0.,datapath=""):
-		if datapath=="":
-			datapath="./dataout/"
-
-		filename=open(datapath + "/planck_sz_spectrum_T=" + str(T) +"keV.txt","wb")
-		wbp=self.fn_sz_2d_bp(T=T) ; wobp=self.fn_sz_2d_bp(T=T)
-		filename.write("%-15s %-15s %-15s \n \n" % ("# Freq.","With BP","Without BP"))
+	def setup_bp_fn_sz_2d_T(self,intkind="quintic"):
+		# Evaluating the channel normalization for the band pass integrations.
+		self.bp_norm=np.zeros(np.size(self.channels),float)
 		for i,ch in enumerate(self.channels):
-			filename.write("%-15.8f %-15.8f %-15.8f\n" % (ch,wbp[i],wobp[i]))
-		filename.close()
+			self.bp_norm[i]=np.sum(self.plbp[ch][1]*self.sz_op.fn["bb_diffT"](self.plbp[ch][0]))
+			
+		# Evaluating the band passed spectra.
+		self.YTeT=np.zeros((np.size(self.channels),np.size(self.sz_op.T)),float)
+		for j,T in enumerate(self.sz_op.T):
+			for i,ch in enumerate(self.channels):
+				self.YTeT[i,j]=np.sum(self.plbp[ch][1]*self.sz_op.fn_sz_2d_I(T,self.plbp[ch][0]).flatten())/self.bp_norm[i]
+		
+		self.bp_fn_sz_2d_T=interp2d(self.sz_op.T,self.channels,self.YTeT,kind=intkind,bounds_error=False,fill_value=0.)
+
+	def return_bp_sz_sed_template_bank(self,nu,Tmin,Tmax,Tstep):
+		Te=np.arange(Tmin,Tmax+Tstep,Tstep,dtype="float")
+		bank={}
+		for T in Te:
+			temp=self.bp_fn_sz_2d_T(T,nu)[:,0]
+			bank[T]={}
+			for i,ch in enumerate(nu):
+				bank[T][ch]=temp[i]
+		return bank

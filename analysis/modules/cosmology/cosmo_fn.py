@@ -1,16 +1,16 @@
 import numpy as np
 from scipy.integrate import romberg
+from settings import constants as cnst
 
 const_Om=0.3 
 const_Ol=0.7 
 const_h=0.7 
-const_c=299792458.0
 
 def Ez(z,Om=const_Om,Ol=const_Ol):
     return np.sqrt(Om*(1.+z)**3 + Ol)
 
 def chi_intg(z):
-    return ((const_c/1000.)/(const_h*100.))/Ez(z)
+    return ((cnst.c_sol/1000.)/(const_h*100.))/Ez(z)
 
 # Proper distance
 def d0(z):

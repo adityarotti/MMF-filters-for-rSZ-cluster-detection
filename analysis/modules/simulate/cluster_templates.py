@@ -27,7 +27,8 @@ class cluster_spectro_spatial_templates(object):
 		if gen_template:
 			self.gen_template()
 		self.gen_template_ft_bank()
-		self.sz_spec_bank=szsed.return_sz_sed_template_bank(np.array(mmfset.channels),self.T_min,self.T_max,self.T_step)
+		self.sz_op=szsed.sz_spectrum()
+		self.sz_spec_bank=self.sz_op.return_sz_sed_template_bank(mmfset.channels,self.T_min,self.T_max,self.T_step)
 		self.setup_fn_yerr_norm()
 		self.setup_channel_beam_filters()
 
@@ -103,18 +104,3 @@ class cluster_spectro_spatial_templates(object):
 		self.chfiltr={}
 		for ch in mmfset.channels:
 			self.chfiltr[ch]=fsa.get_fourier_filter(blp[ch],mmfset.npix,mmfset.reso,ell=ellp)
-
-#def gen_multi_channel_template(theta500,profile="GNFW",cutoff=10.):
-#	npix=mmfset.npix
-#	pixel_size=mmfset.reso
-#
-#	filtr=get_channel_beam_filters(pwc=mmfset.pwc)
-#	cluster=gen_template(theta500=theta500,profile=profile,cutoff=cutoff)
-#	cluster_ft=fsa.map2alm(cluster,pixel_size=mmfset.reso)
-#	template=np.zeros((np.size(mmfset.channels),npix,npix),float)
-#
-#	for i,ch in enumerate(mmfset.channels):
-#			alm=cluster_ft*filtr[ch]
-#			template[i,:,:]=fsa.alm2map(alm,pixel_size)
-#
-#	return template

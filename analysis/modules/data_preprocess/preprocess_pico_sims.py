@@ -7,7 +7,7 @@ from flat_sky_codes import tangent_plane_analysis as tpa
 import unit_conv as uc
 
 def get_reduced_pico_sims():
-	for ch in mmfset.channels:
+	for ch in mmfset.pico_channels:
 		# Noise
 		filename=mmfset.paths["pico_sims"] + str(int(ch))+"GHz/" + "group13_map_" + str(int(ch))+"GHz.fits"
 		tempmap=h.read_map(filename,verbose=False)
