@@ -6,6 +6,7 @@ from astropy.io import fits
 from settings import mmf_settings as mmfset
 from filters import modular_multi_matched_filter as mmf
 from data_preprocess import preprocess_planck_data as ppd
+from data_preprocess import get_tangent_planes as gtp
 from simulate import cluster_templates as cltemp
 from masking import gen_masks as gm
 
