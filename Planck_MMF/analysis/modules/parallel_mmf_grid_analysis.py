@@ -20,9 +20,10 @@ idx_list=np.arange(np.size(mmf_cat["SNR"]))
 emask=gm.return_edge_apodized_mask()
 
 def run_mmf_on_grid_in_parallel(numprocs):
-    p=mp.Pool(processes=numprocs)
+    pool=mp.Pool(processes=numprocs)
     snr=p.map(run_mmf_on_grid,idx_list)
-    return snr
+    pool.close()
+    pool.join()
 
 def run_mmf_on_grid(idx):
 	filename=mmf_cat["FILENAME"][idx]

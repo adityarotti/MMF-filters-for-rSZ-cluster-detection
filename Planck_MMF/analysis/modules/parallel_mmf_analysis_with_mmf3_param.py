@@ -20,11 +20,10 @@ op=mmf.multi_matched_filter(tmplt.sp_ft_bank,tmplt.sz_spec_bank,tmplt.chfiltr,tm
 
 
 def run_mmf_with_mmf3param_in_parallel(numprocs):
-    p=mp.Pool(processes=numprocs)
+    pool=mp.Pool(processes=numprocs)
     snr=p.map(run_mmf_with_mmf3param,idx_list)
-    p.close()
-    p.join()
-    return snr
+    pool.close()
+    pool.join()
 
 def run_mmf_with_mmf3param(idx):
 	filename=mmf_cat["FILENAME"][idx]
