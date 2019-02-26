@@ -28,13 +28,15 @@ ps_mask_weights[353]=1.
 ps_mask_weights[545]=1.
 ps_mask_weights[857]=1.
 
-dataout_dir="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/"
-#dataout_dir="/nvme/arotti/mmf_dataout/"
+#dataout_dir="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/"
+dataout_dir="/nvme/arotti/mmf_dataout/"
 
 paths["templates"]=dataout_dir + "/data/template_bank/" + str(int(xsize)) + "deg_patches/"
 paths["tplanes"]= dataout_dir + "/data/tangent_planes/planck/" + str(int(xsize)) + "deg_patches/"
-paths["result_data"]=dataout_dir + "/results/planck/" + str(int(xsize)) + "deg_patches/data/"
-paths["result_figs"]=dataout_dir + "/results/planck/" + str(int(xsize)) + "deg_patches/figs/"
+
+result_dir=dataout_dir + "/results/" + "planck/" + str(int(xsize)) + "deg_patches/"
+paths["result_data"]=result_dir + "/data/"
+paths["result_figs"]=result_dir + "/figs/"
 
 def init():
 	ensure_dir(paths["templates"])
