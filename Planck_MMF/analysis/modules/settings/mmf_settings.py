@@ -28,21 +28,20 @@ ps_mask_weights[353]=1.
 ps_mask_weights[545]=1.
 ps_mask_weights[857]=1.
 
-projdir="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/"
-paths["templates"]=projdir + "/data/template_bank/" + str(int(xsize)) + "deg_patches/"
-paths["tplanes"]= projdir + "/data/tangent_planes/planck/" + str(int(xsize)) + "deg_patches/"
-paths["result_data"]=projdir + "/results/planck/" + str(int(xsize)) + "deg_patches/data/"
-paths["result_figs"]=projdir + "/results/planck/" + str(int(xsize)) + "deg_patches/figs/"
-paths["result_figs_dump"]=projdir + "/results/planck/" + str(int(xsize)) + "deg_patches/figs_dump/"
-paths["result_img"]=projdir + "/results/planck/" + str(int(xsize)) + "deg_patches/img/"
+dataout_dir="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/"
+#dataout_dir="/nvme/arotti/mmf_dataout/"
+
+paths["templates"]=dataout_dir + "/data/template_bank/" + str(int(xsize)) + "deg_patches/"
+paths["tplanes"]= dataout_dir + "/data/tangent_planes/planck/" + str(int(xsize)) + "deg_patches/"
+paths["result_data"]=dataout_dir + "/results/planck/" + str(int(xsize)) + "deg_patches/data/"
+paths["result_figs"]=dataout_dir + "/results/planck/" + str(int(xsize)) + "deg_patches/figs/"
 
 def init():
 	ensure_dir(paths["templates"])
 	ensure_dir(paths["tplanes"])
 	ensure_dir(paths["result_data"])
 	ensure_dir(paths["result_figs"])
-	ensure_dir(paths["result_figs_dump"])
-	ensure_dir(paths["result_img"])
+
 
 def ensure_dir(file_path):
 	directory = os.path.dirname(file_path)

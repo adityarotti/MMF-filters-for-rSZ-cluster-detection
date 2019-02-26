@@ -12,11 +12,13 @@ fwhm[353.]=4.86 ; fwhm[545.]=4.84 ; fwhm[857.]=4.63
 #fwhm[353.]=4.92 ; fwhm[545.]=4.67 ; fwhm[857.]=4.22
 
 paths={}
-paths["planck_maps"]="../data/Planck/maps/"
-paths["planck_masks"]="../data/Planck/masks/"
-paths["planck_bp"]="../data/Planck/channel_band_passes/"
-paths["planck_mmf3_cat"]="../data/Planck/COM_PCCS_SZ-Catalogs_vPR2/"
-paths["pccs"]="../data/Planck/PCCS/"
+datain_dir="/Users/adityarotti/Documents/Work/Data/Planck/"
+#datain_dir="/nvme/arotti/data/Planck/"
+paths["planck_maps"]=datain_dir + "/maps/"
+paths["planck_masks"]=datain_dir + "/masks/"
+paths["planck_bp"]=datain_dir + "/channel_band_passes/"
+paths["planck_mmf3_cat"]=datain_dir + "/COM_PCCS_SZ-Catalogs_vPR2/"
+paths["pccs"]=datain_dir + "/PCCS/"
 paths["sz_spec"]="../data/sz_spectra/"
 
 # Planck maps
