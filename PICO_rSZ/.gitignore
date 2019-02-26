@@ -1,3 +1,5 @@
+/**/.DS_Store
+*.pyc
 /data/*
 /data/Planck
 /data/tangent_planes
