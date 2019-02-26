@@ -21,7 +21,7 @@ op=mmf.multi_matched_filter(tmplt.sp_ft_bank,tmplt.sz_spec_bank,tmplt.chfiltr,tm
 
 def run_mmf_with_mmf3param_in_parallel(numprocs):
     pool=mp.Pool(processes=numprocs)
-    snr=p.map(run_mmf_with_mmf3param,idx_list)
+    snr=pool.map(run_mmf_with_mmf3param,idx_list)
     pool.close()
     pool.join()
 

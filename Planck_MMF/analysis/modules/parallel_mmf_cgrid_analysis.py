@@ -21,7 +21,7 @@ emask=gm.return_edge_apodized_mask()
 
 def run_mmf_on_cgrid_in_parallel(numprocs):
     pool=mp.Pool(processes=numprocs)
-    snr=p.map(run_mmf_on_cgrid,idx_list)
+    snr=pool.map(run_mmf_on_cgrid,idx_list)
     pool.close()
     pool.join()
 
