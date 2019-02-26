@@ -31,7 +31,7 @@ def run_mmf_with_mmf3param(idx):
 	mask=gtp.return_ps_mask(filename)
 	data=gtp.return_data(filename)
 	op.get_data_ft(data*mask*emask,smwin=5)
-	
+
 	theta500=mmf_cat["theta500"][idx]
 	T500=mmf_cat["T500"][idx]
 	norm=tmplt.fn_yerr_norm(theta500)
