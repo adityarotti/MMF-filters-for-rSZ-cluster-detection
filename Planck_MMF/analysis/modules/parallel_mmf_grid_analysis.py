@@ -27,8 +27,8 @@ def run_mmf_on_grid_in_parallel(numprocs):
 
 def run_mmf_on_grid(idx):
 	filename=mmf_cat["FILENAME"][idx]
-	mask=fits.getdata(filename,2)
-	data=fits.getdata(filename)
+	mask=gtp.return_ps_mask(filename)
+	data=gtp.return_data(filename)
 	op.get_data_ft(data*mask*emask,smwin=5)
 	filename=mmfset.paths["result_data"] + "grid_" + mmf_cat["NAME"][idx][5:] + ".fits"
 	theta500,T500,ans=op.eval_mmf_theta500_T500(maskthr=3.,mask_fdata=True,write_data=True,filename=filename)

@@ -27,9 +27,9 @@ def run_mmf_on_cgrid_in_parallel(numprocs):
 
 def run_mmf_on_cgrid(idx):
     filename=mmf_cat["FILENAME"][idx]
-    mask=fits.getdata(filename,2)
-    data=fits.getdata(filename)
-    op.get_data_ft(data*mask*emask,smwin=5)
+    mask=gtp.return_ps_mask(filename)
+	data=gtp.return_data(filename)
+	op.get_data_ft(data*mask*emask,smwin=5)
     filename=mmfset.paths["result_data"] + "cgrid_" + mmf_cat["NAME"][idx][5:] + ".fits"
 	
     redshift=mmf_cat["REDSHIFT"][idx]

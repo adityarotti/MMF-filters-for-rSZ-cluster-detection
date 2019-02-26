@@ -27,8 +27,8 @@ def run_mmf_with_mmf3param_in_parallel(numprocs):
 
 def run_mmf_with_mmf3param(idx):
 	filename=mmf_cat["FILENAME"][idx]
-	mask=fits.getdata(filename,2)
-	data=fits.getdata(filename)
+	mask=gtp.return_ps_mask(filename)
+	data=gtp.return_data(filename)
 	op.get_data_ft(data*mask*emask,smwin=5)
 	
 	theta500=mmf_cat["theta500"][idx]
