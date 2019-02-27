@@ -153,7 +153,6 @@ class multi_matched_filter(object):
 			
 			hdu1 = fits.ImageHDU()
 			hdu1.header["EXTNAME"]="Result"
-			hdu1.header["COMMENT"]="This is run on a constrained T500-theta500 grid"
 			hdu1.header["COMMENT"]="opt_theta500, opt_T500, y_c err, SNR, y_c, Conv. to Y err"
 			hdu1.data=[thetac,oT500,err,snr_max,yc,norm]
 			
@@ -244,6 +243,7 @@ class multi_matched_filter(object):
 			hdu1= fits.ImageHDU()
 			hdu1.header["EXTNAME"]="Result"
 			hdu1.header["REDSHIFT"]=redshift
+			hdu1.header["COMMENT"]="This is run on a constrained T500-theta500 grid"
 			hdu1.header["COMMENT"]="opt_theta500, opt_T, y_c err, SNR, y_c, Conv. to Y err"
 			hdu1.data=[otheta500,oT500,err,snr_max,yc,onorm]
 

@@ -34,7 +34,7 @@ dataout_dir="/nvme/arotti/mmf_dataout/"
 paths["templates"]=dataout_dir + "/data/template_bank/" + str(int(xsize)) + "deg_patches/"
 paths["tplanes"]= dataout_dir + "/data/tangent_planes/planck/" + str(int(xsize)) + "deg_patches/"
 
-result_dir=dataout_dir + "/results/" + "planck/" + str(int(xsize)) + "deg_patches/"
+result_dir=dataout_dir + "/results/" + "planck_allch/" + str(int(xsize)) + "deg_patches/"
 paths["result_data"]=result_dir + "/data/"
 paths["result_figs"]=result_dir + "/figs/"
 
