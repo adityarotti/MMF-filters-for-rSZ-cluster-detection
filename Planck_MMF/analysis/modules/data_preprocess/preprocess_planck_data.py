@@ -210,3 +210,15 @@ def eval_M500_T500_theta500(clcat):
 	clcat["theta500"]=theta500
 	return clcat
 
+def return_tangent_planes(glon,glat,gen_mask=True):
+	projop=tpa.tangent_plane_setup(mmfset.nside,mmfset.xsize,glat,glon,rescale=1.)
+	data=np.zeros((np.size(mmfset.channels),mmfset.npix,mmfset.npix),float)
+	for ich,ch in enumerate(mmfset.channels):
+		chmap=h.read_map(mmfset.map_fnames[ch],0,verbose=False)/mmfset.conv_KCMB2MJY[ch]
+		data[ich,]=projop.get_tangent_plane(chmap)
+	
+	chmap=gen_ps_mask(ps_cutoff=3.,gen_mask=gen_mask)
+	ps_mask=projop.get_tangent_plane(chmap)
+	chmap=gen_ps_mask(ps_cutoff=5.,gen_mask=gen_mask)
+	ext_ps_mask=projop.get_tangent_plane(chmap)
+	return data,ps_mask,ext_ps_mask
