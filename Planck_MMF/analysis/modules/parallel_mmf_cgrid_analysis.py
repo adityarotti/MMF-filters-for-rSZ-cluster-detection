@@ -4,14 +4,15 @@ import multiprocessing as mp
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from astropy.io import fits
-from settings import mmf_settings as mmfset
+from modules.settings import global_mmf_settings as gset
 from filters import modular_multi_matched_filter as mmf
 from data_preprocess import preprocess_planck_data as ppd
 from data_preprocess import get_tangent_planes as gtp
 from simulate import cluster_templates as cltemp
 from masking import gen_masks as gm
 
-mmfset.init()
+outpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF_new/"
+gset.setup_mmf_config(outpath=outpath,gen_paths=True,xsize=10.,chmin=100.)
 mmf_cat=ppd.get_tangent_plane_fnames()
 mmf_cat=ppd.eval_M500_T500_theta500(mmf_cat)
 tmplt=cltemp.cluster_spectro_spatial_templates(T_step=1.,T_max=50.)
@@ -31,7 +32,7 @@ def run_mmf_on_cgrid(idx):
     mask=gtp.return_ps_mask(filename)
     data=gtp.return_data(filename)
     op.get_data_ft(data*mask*emask,smwin=5)
-    filename=mmfset.paths["result_data"] + "cgrid_" + mmf_cat["NAME"][idx][5:] + ".fits"
+    filename=gset.mmfset.paths["result_data"] + "cgrid_" + mmf_cat["NAME"][idx][5:] + ".fits"
 	
     redshift=mmf_cat["REDSHIFT"][idx]
     err,snr_max,yc,oT500,ans=op.eval_mmf_theta500_T500_constrained(redshift,maskthr=3.,mask_fdata=True,write_data=True,filename=filename)

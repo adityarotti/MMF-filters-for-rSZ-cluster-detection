@@ -2,7 +2,7 @@ import os
 import numpy as np
 import healpy as h
 from astropy.io import fits
-from settings import global_mmf_settings as gset
+from modules.settings import global_mmf_settings as gset
 from flat_sky_codes import tangent_plane_analysis as tpa
 import unit_conv as uc
 

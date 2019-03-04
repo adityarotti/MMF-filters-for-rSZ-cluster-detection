@@ -2,7 +2,7 @@ import numpy as np
 from astropy.io import fits
 from scipy.interpolate import interp1d
 
-from settings import global_mmf_settings as gset
+from modules.settings import global_mmf_settings as gset
 from flat_sky_codes import flat_sky_analysis as fsa
 from masking import gen_masks as gm
 from cosmology import cosmo_fn as cosmo_fn

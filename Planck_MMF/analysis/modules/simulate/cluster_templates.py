@@ -4,8 +4,7 @@ import healpy as h
 from astropy.io import fits
 from scipy.interpolate import interp1d
 
-from settings import global_mmf_settings as gset
-#from spectral_template import sz_spec as szsed
+from modules.settings import global_mmf_settings as gset
 from spectral_template import planck_band_pass_sz as plbpsz
 from spatial_template import sim_cluster as sc
 from flat_sky_codes  import flat_sky_analysis as fsa

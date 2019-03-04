@@ -3,10 +3,10 @@ import healpy as h
 from scipy.interpolate import interp1d
 from astropy.io import fits
 
+from modules.settings import global_mmf_settings as gset
 from spectral_template import sz_spec as szsed
 from spatial_template import sim_cluster as sc
 from spatial_template import sz_pressure_profile as szp
-from settings import global_mmf_settings as gset
 from flat_sky_codes import flat_sky_analysis as fsa
 from flat_sky_codes import tangent_plane_analysis as tpa
 

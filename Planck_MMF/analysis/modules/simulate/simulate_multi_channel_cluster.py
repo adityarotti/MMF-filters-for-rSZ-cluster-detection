@@ -1,6 +1,6 @@
 import numpy as np
+from modules.settings import global_mmf_settings as gset
 from cosmology import cosmo_fn as clcosmo
-from settings import global_mmf_settings as gset
 from spatial_template import sim_cluster as sc
 from flat_sky_codes  import flat_sky_analysis as fsa
 

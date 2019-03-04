@@ -2,8 +2,7 @@ import os
 import healpy as h
 import numpy as np
 
-#global mmfset
-#mmfset={}
+mmfset=None
 
 def setup_mmf_config(dataset="planck",outpath="",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],result_midfix="",gen_paths=True):
 	global mmfset
@@ -43,7 +42,7 @@ class setup_mmf_analysis(object):
 
 		# Setting dataout paths
 		self.paths["templates"]=self.outpath + "/data/template_bank/" + str(int(xsize)) + "deg_patches/"
-		self.paths["tplanes"]=self.outpath + "/data/tangent_planes/planck/" + str(int(xsize)) + "deg_patches/"
+		self.paths["tplanes"]=self.outpath + "/data/tangent_planes/" + str(int(xsize)) + "deg_patches/"
 
 		# Setting result paths
 		if self.result_midfix=="":

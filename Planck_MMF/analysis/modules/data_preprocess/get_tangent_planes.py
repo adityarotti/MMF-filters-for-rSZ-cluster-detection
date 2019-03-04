@@ -1,6 +1,6 @@
 import numpy as np
 from astropy.io import fits
-from settings import global_mmf_settings as gset
+from modules.settings import global_mmf_settings as gset
 
 def return_data(filename):
 	channels=fits.getdata(filename,ext=1)

@@ -4,7 +4,7 @@ import healpy as h
 from astropy.io import fits
 
 from flat_sky_codes import tangent_plane_analysis as tpa
-from settings import global_mmf_settings as gset
+from modules.settings import global_mmf_settings as gset
 from masking import gen_masks as gm
 
 def extract_data_tiles(do_data=True,do_mask=True,gen_mask=True,verbose=False,glat_thr=0.):

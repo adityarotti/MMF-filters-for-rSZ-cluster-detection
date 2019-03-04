@@ -4,7 +4,7 @@ import healpy as h
 from astropy.io import fits
 
 from flat_sky_codes import tangent_plane_analysis as tpa
-from settings import global_mmf_settings as gset
+from modules.settings import global_mmf_settings as gset
 from cosmology import cosmo_fn
 
 def extract_tangent_planes(verbose=False,snrthr=6.,cosmo_flag=True,zknown=True):

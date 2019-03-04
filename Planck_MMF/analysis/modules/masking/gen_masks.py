@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 import healpy as h
-from settings import global_mmf_settings as gset
+from modules.settings import global_mmf_settings as gset
 from flat_sky_codes import flat_sky_analysis as fsa
 
 def return_center_mask(radius=50.):

@@ -3,14 +3,16 @@ import multiprocessing as mp
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from astropy.io import fits
-from settings import mmf_settings as mmfset
+from settings import global_mmf_settings as gset
 from filters import modular_multi_matched_filter as mmf
 from data_preprocess import preprocess_planck_data as ppd
 from data_preprocess import get_tangent_planes as gtp
 from simulate import cluster_templates as cltemp
 from masking import gen_masks as gm
 
-mmfset.init()
+outpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/output/planck/"
+gset.setup_mmf_config(outpath=outpath,gen_paths=True,xsize=10.,chmin=100.)
+
 tmplt=cltemp.cluster_spectro_spatial_templates(T_step=1.)
 tmplt.setup_templates()
 mmf_cat=ppd.get_tangent_plane_fnames()
@@ -35,7 +37,7 @@ def run_mmf_with_mmf3param(idx):
 	theta500=mmf_cat["theta500"][idx]
 	T500=mmf_cat["T500"][idx]
 	norm=tmplt.fn_yerr_norm(theta500)
-	
+
 	fdata0,err0,snr0,yc0=op.return_snr(thetac=round(theta500,0),Tc=0)
 	fdataT,errT,snrT,ycT=op.return_snr(thetac=round(theta500,0),Tc=round(T500,0))
 
@@ -59,8 +61,8 @@ def run_mmf_with_mmf3param(idx):
 	hdu4.data=fdataT
 
 	hdu=fits.HDUList([hdu0,hdu1,hdu2,hdu3,hdu4])
-	filename=mmfset.paths["result_data"] + "mmf3par_" + mmf_cat["NAME"][idx][5:] + ".fits"
+	filename=gset.mmfset.paths["result_data"] + "mmf3par_" + mmf_cat["NAME"][idx][5:] + ".fits"
 	hdu.writeto(filename,overwrite=True)
-	
+
 	print mmf_cat["SNR"][idx],snr0,snrT
 	return snr0

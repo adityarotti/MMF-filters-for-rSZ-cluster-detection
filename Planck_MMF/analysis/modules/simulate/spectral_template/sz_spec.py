@@ -3,13 +3,13 @@ import sympy as sp
 from scipy.interpolate import interp1d
 from scipy.interpolate import interp2d
 from settings import constants as cnst
-from settings import mmf_settings as mmfset
+from modules.settings import global_mmf_settings as gset
 
 
 class sz_spectrum(object):
 	def __init__(self,szspecpath=""):
 		if szspecpath=="":
-			self.szspecpath=mmfset.paths["sz_spec"]
+			self.szspecpath=gset.mmfset.paths["sz_spec"]
 		else:
 			self.szspecpath=szspecpath
 
