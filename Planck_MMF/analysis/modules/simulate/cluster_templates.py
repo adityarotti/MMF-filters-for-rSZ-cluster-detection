@@ -4,7 +4,7 @@ import healpy as h
 from astropy.io import fits
 from scipy.interpolate import interp1d
 
-from settings import mmf_settings as mmfset
+from settings import global_mmf_settings as gset
 #from spectral_template import sz_spec as szsed
 from spectral_template import planck_band_pass_sz as plbpsz
 from spatial_template import sim_cluster as sc
@@ -29,11 +29,11 @@ class cluster_spectro_spatial_templates(object):
 			self.gen_template()
 		self.gen_template_ft_bank()
 		#self.sz_op=szsed.sz_spectrum()
-		#self.sz_spec_bank=self.sz_op.return_sz_sed_template_bank(mmfset.channels,self.T_min,self.T_max,self.T_step)
+		#self.sz_spec_bank=self.sz_op.return_sz_sed_template_bank(gset.mmfset.channels,self.T_min,self.T_max,self.T_step)
 		self.sz_op=plbpsz.band_pass_filtering()
-		self.sz_spec_bank=self.sz_op.return_bp_sz_sed_template_bank(mmfset.channels,self.T_min,self.T_max,self.T_step)
+		self.sz_spec_bank=self.sz_op.return_bp_sz_sed_template_bank(gset.mmfset.channels,self.T_min,self.T_max,self.T_step)
 		self.sz_op=plbpsz.band_pass_filtering()
-		self.sz_spec_bank=self.sz_op.return_bp_sz_sed_template_bank(mmfset.channels,self.T_min,self.T_max,self.T_step)
+		self.sz_spec_bank=self.sz_op.return_bp_sz_sed_template_bank(gset.mmfset.channels,self.T_min,self.T_max,self.T_step)
 		self.setup_fn_yerr_norm()
 		self.setup_channel_beam_filters()
 
@@ -45,21 +45,21 @@ class cluster_spectro_spatial_templates(object):
 			hdu.header["R500"]=str(thetac) + " arcminutes"
 			hdu.header["profile"]=profile
 			hdu.data=template
-			filename=mmfset.paths["templates"] + "cluster_" +str(thetac) + ".fits"
+			filename=gset.mmfset.paths["templates"] + "cluster_" +str(thetac) + ".fits"
 			hdu.writeto(filename,overwrite=True)
 
 	def gen_template(self,thetac):
-		template=sc.gen_cluster_template(mmfset.npix,thetac,pixel_size=mmfset.reso,y0=1.,cutoff=self.cutoff,dorandom=False,profile=self.profile)
+		template=sc.gen_cluster_template(gset.mmfset.npix,thetac,pixel_size=gset.mmfset.reso,y0=1.,cutoff=self.cutoff,dorandom=False,profile=self.profile)
 		return template
 
 	def gen_template_ft_bank(self):
 		self.sp_ft_bank={}
 		for thetac in self.theta500:
 			template=self.get_template(thetac)
-			self.sp_ft_bank[thetac]=fsa.map2alm(np.fft.fftshift(template),mmfset.reso)
+			self.sp_ft_bank[thetac]=fsa.map2alm(np.fft.fftshift(template),gset.mmfset.reso)
 
 	def get_template(self,thetac,getheader=False):
-		filename=mmfset.paths["templates"] + "cluster_" +str(thetac) + ".fits"
+		filename=gset.mmfset.paths["templates"] + "cluster_" +str(thetac) + ".fits"
 		file_exists = os.path.isfile(filename)
 
 		if file_exists:
@@ -74,7 +74,7 @@ class cluster_spectro_spatial_templates(object):
 			print filename, " does not exist."
 			print "generating the template to return"
 			
-			template=sc.gen_cluster_template(mmfset.npix,thetac,pixel_size=mmfset.reso,y0=1.,cutoff=10.,dorandom=False,profile="GNFW")
+			template=sc.gen_cluster_template(gset.mmfset.npix,thetac,pixel_size=gset.mmfset.reso,y0=1.,cutoff=10.,dorandom=False,profile="GNFW")
 			hdu = fits.ImageHDU()
 			hdu.header["Comments"]="Template"
 			hdu.header["R500"]=str(thetac) + " arcminutes"
@@ -88,24 +88,24 @@ class cluster_spectro_spatial_templates(object):
 		noise_norm=np.zeros(np.size(self.theta500))
 		for idx,thetac in enumerate(self.theta500):
 			template=self.get_template(thetac)
-			noise_norm[idx]=np.sum(template)*mmfset.reso*mmfset.reso
+			noise_norm[idx]=np.sum(template)*gset.mmfset.reso*gset.mmfset.reso
 		self.fn_yerr_norm=interp1d(self.theta500,noise_norm,bounds_error=False,fill_value=0.)
 
 
 	def setup_channel_beam_filters(self):
-		lmax=4*mmfset.nside
+		lmax=4*gset.mmfset.nside
 		
-		pwc=h.pixwin(mmfset.nside,pol=False)
+		pwc=h.pixwin(gset.mmfset.nside,pol=False)
 		ellpwc=np.arange(np.size(pwc),dtype="float")
-		if not(mmfset.pwc):
+		if not(gset.mmfset.pwc):
 			pwc[:]=1.
 		
 		blp={}
-		for ch in mmfset.channels:
-			ellp,temp_bl=fsa.get_gauss_beam(mmfset.fwhm[ch],lmax=lmax)
+		for ch in gset.mmfset.channels:
+			ellp,temp_bl=fsa.get_gauss_beam(gset.mmfset.fwhm[ch],lmax=lmax)
 			chpwc=np.interp(ellp,ellpwc,pwc)
 			blp[ch]=temp_bl*chpwc
 
 		self.chfiltr={}
-		for ch in mmfset.channels:
-			self.chfiltr[ch]=fsa.get_fourier_filter(blp[ch],mmfset.npix,mmfset.reso,ell=ellp)
+		for ch in gset.mmfset.channels:
+			self.chfiltr[ch]=fsa.get_fourier_filter(blp[ch],gset.mmfset.npix,gset.mmfset.reso,ell=ellp)

@@ -14,7 +14,7 @@ def gnfw_3D_pressure_profile(z,rho,R500):
 	p3d=upp.P0/(den1*den2)
 	return p3d
 
-def gnfw_2D_pressure_profile(rho,R500,limits=50.,frac=0.0001):
+def gnfw_2D_pressure_profile(rho,R500,limits=50.,frac=1e-6):
 	'''
 	The nomalization is such that the center of the cluster is set to unity.
 	'''
@@ -36,7 +36,7 @@ def beta_3D_pressure_profile(z,rho,R500):
 	p3d=P0*(1. + (r**2.)/(R500**2.))**(-3.*beta/2.)
 	return p3d
 
-def beta_2D_pressure_profile(rho,R500,limits=500.,frac=0.0001):
+def beta_2D_pressure_profile(rho,R500,limits=500.,frac=1e-6):
 	p2d0=quad(beta_3D_pressure_profile,-limits*R500,limits*R500,args=(frac*R500,R500))[0]
 	if np.size(rho)>1:
 		p2d=np.zeros(np.size(rho),float)
@@ -57,13 +57,13 @@ def analytical_beta_2D_profile_profile(rho,R500):
 	projy=(1.+ (rho/R500)**2.)**(-(3.*beta-1.)/2.)
 	return projy
 
-def convert_Ycyl_xR500_Ysph_xR500(R500=10.,xcyl=5.,xsph=1.,limits=50.,frac=0.0001):
+def convert_Ycyl_xR500_Ysph_xR500(R500=10.,xcyl=5.,xsph=1.,limits=50.,frac=1e-6):
 	Ycyl_xR500,norm=return_Ycyl_xR500(R500=R500,xcyl=xcyl,limits=limits,frac=frac)
 	Ysph_xcylR500=return_Ysph_xR500(R500=R500,xsph=xcyl)
 	Ysph_xR500=return_Ysph_xR500(R500=R500,xsph=xsph)
 	return Ysph_xR500/Ycyl_xR500
 
-def return_Ycyl_xR500(R500,xcyl,limits=50.,frac=0.0001):
+def return_Ycyl_xR500(R500,xcyl,limits=50.,frac=1e-6):
 	fn=lambda rho,z: 2.*np.pi*gnfw_3D_pressure_profile(z,rho,R500)*rho
 	Ycyl_xR500=2.*dblquad(fn,0,limits*R500,lambda rho: 0., lambda rho: xcyl*R500)[0]
 	norm=2.*quad(gnfw_3D_pressure_profile,0.,limits*R500,args=(frac*R500,R500))[0]

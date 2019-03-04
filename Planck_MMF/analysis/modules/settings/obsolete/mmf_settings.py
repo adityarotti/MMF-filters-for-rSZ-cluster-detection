@@ -7,7 +7,7 @@ from experiments.planck import *
 
 nside=2048		# Healpix resolution of the maps
 pwc=True
-xsize=12 		# Degrees.
+xsize=5.		# Degrees.
 projection_operator=tpa.tangent_plane_setup(nside,xsize,0.,0.,rescale=1.)
 reso=projection_operator.pixel_size # arcminutes
 npix=projection_operator.npix

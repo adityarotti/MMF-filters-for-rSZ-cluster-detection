@@ -4,23 +4,23 @@ import healpy as h
 from astropy.io import fits
 
 from flat_sky_codes import tangent_plane_analysis as tpa
-from settings import mmf_settings as mmfset
+from settings import global_mmf_settings as gset
 from cosmology import cosmo_fn
 
 def extract_tangent_planes(verbose=False,snrthr=6.,cosmo_flag=True,zknown=True):
     mmf3=get_mmf3_catalogue(snrthr=snrthr,cosmo_flag=cosmo_flag,zknown=True)
-    numch=np.size(mmfset.channels)
-    timage=np.zeros((numch,mmfset.npix,mmfset.npix),dtype="float")
+    numch=np.size(gset.mmfset.channels)
+    timage=np.zeros((numch,gset.mmfset.npix,gset.mmfset.npix),dtype="float")
 
     if verbose:
         print "Catalogue size: ", np.size(mmf3["SNR"])
     tfname=[None]*np.size(mmf3["SNR"])
 	
     planck_maps={}
-    for ch in mmfset.channels:
+    for ch in gset.mmfset.channels:
     	if verbose:
-    		print mmfset.map_fnames[ch]
-    	planck_maps[ch]=h.read_map(mmfset.map_fnames[ch],0,verbose=False) #/mmfset.conv_KCMB2MJY[ch]
+    		print gset.mmfset.map_fnames[ch]
+    	planck_maps[ch]=h.read_map(gset.mmfset.map_fnames[ch],0,verbose=False) #/gset.mmfset.conv_KCMB2MJY[ch]
 
 	fs_mask=gen_ps_mask()
 
@@ -32,7 +32,7 @@ def extract_tangent_planes(verbose=False,snrthr=6.,cosmo_flag=True,zknown=True):
     	snr=mmf3["SNR"][idx]
     	#print idx,clstrname,glon,glat,snr
 		
-    	projop=tpa.tangent_plane_setup(mmfset.nside,mmfset.xsize,glat,glon,rescale=1.)
+    	projop=tpa.tangent_plane_setup(gset.mmfset.nside,gset.mmfset.xsize,glat,glon,rescale=1.)
     	mask=projop.get_tangent_plane(fs_mask)
     	hdu_mask = fits.ImageHDU()
     	hdu_mask.data=mask
@@ -40,14 +40,14 @@ def extract_tangent_planes(verbose=False,snrthr=6.,cosmo_flag=True,zknown=True):
 		
     	hdu_map = fits.ImageHDU()
     	hdu_map.header["EXTNAME"]="Planck data tangent plane"
-    	hdu_map.header["XYsize"]=str(mmfset.xsize) + " degrees"
-    	hdu_map.header["Reso"]=str(mmfset.reso) + " arcminutes"
+    	hdu_map.header["XYsize"]=str(gset.mmfset.xsize) + " degrees"
+    	hdu_map.header["Reso"]=str(gset.mmfset.reso) + " arcminutes"
     	hdu_map.header["GLON"]=str(glon) + " degrees"
     	hdu_map.header["GLAT"]=str(glat) + " degrees"
     	hdu_map.header["SNR"]=str(snr)
 
 		
-    	for i,ch in enumerate(mmfset.channels):
+    	for i,ch in enumerate(gset.mmfset.channels):
             timage[i,]=projop.get_tangent_plane(planck_maps[ch])
     	    key="Ch" + str(i)
     	    hdu_map.header[key]=ch
@@ -55,7 +55,7 @@ def extract_tangent_planes(verbose=False,snrthr=6.,cosmo_flag=True,zknown=True):
 	hdu_map.data=timage
 
 	hdu=fits.HDUList([hdu0,hdu_map,hdu_mask])
-	filename=mmfset.paths["tplanes"] + "cluster_" + clstrname[5:] + ".fits"
+	filename=gset.mmfset.paths["tplanes"] + "cluster_" + clstrname[5:] + ".fits"
 	hdu.writeto(filename,overwrite=True)
 	tfname[idx]=filename
 
@@ -64,17 +64,17 @@ def extract_tangent_planes(verbose=False,snrthr=6.,cosmo_flag=True,zknown=True):
     return mmf3
 
 def gen_ps_mask(snrthr=10.,ps_cutoff=3.,verbose=False):
-    filename=mmfset.paths["planck_masks"] + "mmf3_ps_mask.fits"
+    filename=gset.mmfset.paths["planck_masks"] + "mmf3_ps_mask.fits"
     if os.path.isfile(filename):
         mask=h.read_map(filename,verbose=verbose)
     else:
-	mask=np.ones(h.nside2npix(mmfset.nside),float)
-	#chmask=np.ones((np.size(mmfset.channels),h.nside2npix(mmfset.nside)),float)
-	chmask=np.ones(h.nside2npix(mmfset.nside),float)
-	for ich,ch in enumerate(mmfset.channels):
+	mask=np.ones(h.nside2npix(gset.mmfset.nside),float)
+	#chmask=np.ones((np.size(gset.mmfset.channels),h.nside2npix(gset.mmfset.nside)),float)
+	chmask=np.ones(h.nside2npix(gset.mmfset.nside),float)
+	for ich,ch in enumerate(gset.mmfset.channels):
 	    chmask[:]=1.
-	    f=fits.open(mmfset.ps_cat_fname[ch])
-	    radius=(ps_cutoff/np.sqrt(8.*np.log(2.)))*(mmfset.fwhm[ch]/60.)*np.pi/180.
+	    f=fits.open(gset.mmfset.ps_cat_fname[ch])
+	    radius=(ps_cutoff/np.sqrt(8.*np.log(2.)))*(gset.mmfset.fwhm[ch]/60.)*np.pi/180.
 		
 	    detflux=f[f[1].header["EXTNAME"]].data.field("DETFLUX")
 	    err=f[f[1].header["EXTNAME"]].data.field("DETFLUX_ERR")
@@ -82,14 +82,14 @@ def gen_ps_mask(snrthr=10.,ps_cutoff=3.,verbose=False):
 		
 	    glon=detflux=f[f[1].header["EXTNAME"]].data.field("GLON")[snr_mask]
 	    glat=detflux=f[f[1].header["EXTNAME"]].data.field("GLAT")[snr_mask]
-	    pixcs=h.ang2pix(mmfset.nside,glon,glat,lonlat=True)
+	    pixcs=h.ang2pix(gset.mmfset.nside,glon,glat,lonlat=True)
 
 	    if verbose:
 	        print ch,np.size(pixcs)
 
 	    for pix in pixcs:
-	        vec=h.pix2vec(mmfset.nside,pix)
-		disc_pix=h.query_disc(mmfset.nside,vec,radius=radius,fact=4,inclusive=True)
+	        vec=h.pix2vec(gset.mmfset.nside,pix)
+		disc_pix=h.query_disc(gset.mmfset.nside,vec,radius=radius,fact=4,inclusive=True)
 		chmask[disc_pix]=0.0
 	    mask=mask*chmask
 
@@ -100,9 +100,9 @@ def gen_ps_mask(snrthr=10.,ps_cutoff=3.,verbose=False):
 # This is obsolete as the point source mask map provided
 # on the legacy archive also mask some of the clusters.
 def return_ps_mask(return_gal_mask=False,idx=0):
-	mask=np.ones(h.nside2npix(mmfset.nside),float)
+	mask=np.ones(h.nside2npix(gset.mmfset.nside),float)
 	for i in range(6):
-		mask=mask*h.read_map(mmfset.ps_mask_name,i,verbose=False)
+		mask=mask*h.read_map(gset.mmfset.ps_mask_name,i,verbose=False)
 	return mask
 
 def get_tangent_plane_fnames(snrthr=6.,cosmo_flag=True,zknown=True):
@@ -110,7 +110,7 @@ def get_tangent_plane_fnames(snrthr=6.,cosmo_flag=True,zknown=True):
 
     tfname=[None]*np.size(mmf3["SNR"])
     for idx,clstrname in enumerate(mmf3["NAME"]):
-        filename=mmfset.paths["tplanes"] + "cluster_" + clstrname[5:] + ".fits"
+        filename=gset.mmfset.paths["tplanes"] + "cluster_" + clstrname[5:] + ".fits"
         tfname[idx]=filename
 
 	mmf3["FILENAME"]=tfname
@@ -118,8 +118,8 @@ def get_tangent_plane_fnames(snrthr=6.,cosmo_flag=True,zknown=True):
 
 
 def get_mmf3_catalogue(snrthr=6.,cosmo_flag=True,zknown=True):
-    ints_sample = fits.open(mmfset.union_cat_file)
-    mmf3_sample = fits.open(mmfset.mmf3_cat_file)
+    ints_sample = fits.open(gset.mmfset.union_cat_file)
+    mmf3_sample = fits.open(gset.mmfset.mmf3_cat_file)
 
     # Getting the keys for the union catalogue
     keys_ints=ints_sample['PSZ2_UNION'].header.keys()

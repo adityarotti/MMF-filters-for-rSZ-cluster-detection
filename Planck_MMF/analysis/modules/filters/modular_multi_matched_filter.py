@@ -2,7 +2,7 @@ import numpy as np
 from astropy.io import fits
 from scipy.interpolate import interp1d
 
-from settings import mmf_settings as mmfset
+from settings import global_mmf_settings as gset
 from flat_sky_codes import flat_sky_analysis as fsa
 from masking import gen_masks as gm
 from cosmology import cosmo_fn as cosmo_fn
@@ -15,13 +15,13 @@ class multi_matched_filter(object):
 		self.chfiltr=chfiltr
 		self.fn_yerr_norm=fn_yerr_norm
 		
-		self.numch=np.size(mmfset.channels)
-		self.nxpix=mmfset.npix ; self.totnpix=self.nxpix*self.nxpix
-		self.d2x=((mmfset.reso/60.)*np.pi/180.)**2. ; self.d2k= 1./(self.totnpix*self.d2x)
+		self.numch=np.size(gset.mmfset.channels)
+		self.nxpix=gset.mmfset.npix ; self.totnpix=self.nxpix*self.nxpix
+		self.d2x=((gset.mmfset.reso/60.)*np.pi/180.)**2. ; self.d2k= 1./(self.totnpix*self.d2x)
 		
 		# Low pass filtr
 		ell=np.arange(20000) ; bl=np.ones(np.size(ell),float) ; bl[ell>=lmax_cutoff]=0.
-		self.lpfiltr=fsa.get_fourier_filter(bl,nxpix=mmfset.npix,pixel_size=mmfset.reso,ell=ell)
+		self.lpfiltr=fsa.get_fourier_filter(bl,nxpix=gset.mmfset.npix,pixel_size=gset.mmfset.reso,ell=ell)
 	
 		self.cmask=gm.return_center_mask()
 	
@@ -29,11 +29,11 @@ class multi_matched_filter(object):
 		self.data_ft=np.zeros((self.numch,self.nxpix,self.nxpix),complex)
 		self.cross_Pk=np.zeros((self.totnpix,self.numch,self.numch),np.float64)
 		
-		for i,ch in enumerate(mmfset.channels):
-			self.data_ft[i,]=fsa.map2alm(data[i,],mmfset.reso)
+		for i,ch in enumerate(gset.mmfset.channels):
+			self.data_ft[i,]=fsa.map2alm(data[i,],gset.mmfset.reso)
 			for j in range(i+1):
-				ell,cl=fsa.alm2cl(alm=self.data_ft[i,],almp=self.data_ft[j,],pixel_size=mmfset.reso,smwin=smwin)
-				filtr=fsa.get_fourier_filter(cl,self.nxpix,mmfset.reso,ell=ell)
+				ell,cl=fsa.alm2cl(alm=self.data_ft[i,],almp=self.data_ft[j,],pixel_size=gset.mmfset.reso,smwin=smwin)
+				filtr=fsa.get_fourier_filter(cl,self.nxpix,gset.mmfset.reso,ell=ell)
 				self.cross_Pk[:,i,j]=filtr.reshape(self.totnpix)
 				self.cross_Pk[:,j,i]=self.cross_Pk[:,i,j]
 				
@@ -42,7 +42,7 @@ class multi_matched_filter(object):
 
 	def evaluate_mmf(self,template_alm,sz_spec,optimize=False):
 		template_ft=np.zeros((self.totnpix,self.numch),np.complex)
-		for i,ch in enumerate(mmfset.channels):
+		for i,ch in enumerate(gset.mmfset.channels):
 			template_ft[:,i]=(template_alm*self.chfiltr[ch]*sz_spec[ch]).reshape(self.totnpix)
 
 		normk=np.einsum("ki,kij,kj->k",template_ft,self.cross_Pk_inv,np.conj(template_ft),optimize=optimize)
@@ -54,13 +54,13 @@ class multi_matched_filter(object):
 		for i in range(self.numch):
 			result_ft += mmf[:,:,i]*self.data_ft[i,:,:]*self.lpfiltr
 			
-		result=fsa.alm2map(result_ft,mmfset.reso)
+		result=fsa.alm2map(result_ft,gset.mmfset.reso)
 		return result,rec_err
 
 	def return_snr(self,thetac,Tc,maskthr=3.,mask_fdata=True,psmask=[],write_data=False,filename=[]):
 		fdata,err=self.evaluate_mmf(self.sp_ft_bank[thetac],self.sz_spec_bank[Tc])
-		mask=np.ones((mmfset.npix,mmfset.npix),float)
-		psmask=np.ones((mmfset.npix,mmfset.npix),float)
+		mask=np.ones((gset.mmfset.npix,gset.mmfset.npix),float)
+		psmask=np.ones((gset.mmfset.npix,gset.mmfset.npix),float)
 		
 		if mask_fdata:
 			# This will mask the clusters in the field
@@ -94,7 +94,7 @@ class multi_matched_filter(object):
 
 	def return_optimal_theta500(self,Tc,maskthr=3.,mask_fdata=True,write_data=False,filename=[]):
 		ans=np.zeros((4,np.size(self.sp_ft_bank.keys())),float)
-		#fdata=np.zeros((np.size(template_ft_bank.keys()),mmfset.npix,mmfset.npix),float)
+		#fdata=np.zeros((np.size(template_ft_bank.keys()),gset.mmfset.npix,gset.mmfset.npix),float)
 		theta500=sorted(self.sp_ft_bank.keys())
 		for idx,thetac in enumerate(theta500):
 			template_ft=self.sp_ft_bank[thetac]
@@ -136,7 +136,7 @@ class multi_matched_filter(object):
 	def return_optimal_T500(self,thetac,maskthr=3.,mask_fdata=True,write_data=False,filename=[]):
 		ans=np.zeros((4,np.size(self.sz_spec_bank.keys())),float)
 		norm=self.fn_yerr_norm(thetac)
-		#fdata=np.zeros((np.size(sz_spec_bank.keys()),mmfset.npix,mmfset.npix),float)
+		#fdata=np.zeros((np.size(sz_spec_bank.keys()),gset.mmfset.npix,gset.mmfset.npix),float)
 		T500=sorted(self.sz_spec_bank.keys())
 		for idx,Tc in enumerate(T500):
 			fdata,ans[0,idx],ans[1,idx],ans[2,idx]=self.return_snr(thetac,Tc,mask_fdata=mask_fdata)
