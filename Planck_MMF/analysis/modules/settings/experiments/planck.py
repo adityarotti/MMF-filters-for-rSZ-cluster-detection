@@ -40,6 +40,7 @@ ps_mask_name=paths["planck_masks"] + "HFI_Mask_PointSrc_2048_R2.00.fits"
 # Cluster catalogue
 mmf3_cat_file=paths["planck_mmf3_cat"] + "HFI_PCCS_SZ-MMF3_R2.08.fits"
 union_cat_file=paths["planck_mmf3_cat"] + "HFI_PCCS_SZ-union_R2.08.fits"
+esz_cat_2011_file=paths["planck_mmf3_cat"] + "esz_cat_2011.txt"
 
 # Point source catalogue
 ps_cat_fname={}

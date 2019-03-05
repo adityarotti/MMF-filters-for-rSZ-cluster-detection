@@ -8,4 +8,5 @@ m_sun=1.989e30 				# kg
 m_proton=1.6726e-27 		# kg
 e_rme=511.					# keV
 mu_e=1.148					# Mean molecular weight of electrons
+mpc=3.085677581*1e22        # Mega parsecs in meters
 # All constants set in SI units
