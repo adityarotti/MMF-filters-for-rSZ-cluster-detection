@@ -46,7 +46,7 @@ class setup_mmf_analysis(object):
 
 		# Setting result paths
 		if self.result_midfix=="":
-			self.result_path=self.outpath + "/results/" + "/" + self.dataset + "/" + str(int(xsize)) + "deg_patches/"
+			self.result_path=self.outpath + "/results/" + str(int(xsize)) + "deg_patches/"
 		else:
 			self.result_path=self.outpath + "/results/" + "/" + self.result_midfix + "/" + str(int(xsize)) + "deg_patches/"
 
