@@ -48,8 +48,8 @@ def extract_tangent_planes(dryrun=False,verbose=False):
 						hdu_map.header["EXTNAME"]="Data tangent plane"
 						hdu_map.header["XYsize"]=str(gset.mmfset.xsize) + " degrees"
 						hdu_map.header["Reso"]=str(gset.mmfset.reso) + " arcminutes"
-						hdu_map.header["GLON"]=str(round(glon[ipix],4)) + " degrees"
-						hdu_map.header["GLAT"]=str(round(glat[ipix],4)) + " degrees"
+						hdu_map.header["GLON"]=str(round(glon,4)) + " degrees"
+						hdu_map.header["GLAT"]=str(round(glat,4)) + " degrees"
 						null_data=np.zeros((np.size(gset.mmfset.channels),gset.mmfset.npix,gset.mmfset.npix),float)
 						null_data[ich,:,:]=timage
 						hdu_map.data=null_data
