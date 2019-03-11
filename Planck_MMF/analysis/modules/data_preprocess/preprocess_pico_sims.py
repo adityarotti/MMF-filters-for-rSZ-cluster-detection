@@ -11,7 +11,7 @@ def get_reduced_pico_sims():
 		# Noise
 		filename=gset.mmfset.paths["pico_sims"] + str(int(ch))+"GHz/" + "group13_map_" + str(int(ch))+"GHz.fits"
 		tempmap=h.read_map(filename,verbose=False)
-		h.write_map(gset.mmfset.map_names["noise"][ch],tempmap,overwrite=True)
+		h.write_map(gset.mmfset.map_fnames["noise"][ch],tempmap,overwrite=True)
 		
 		#All sky
 		filename=gset.mmfset.paths["pico_sims"] + str(int(ch))+"GHz/" + "group2_map_" + str(int(ch))+"GHz.fits"
@@ -29,8 +29,8 @@ def get_reduced_pico_sims():
 		filename=gset.mmfset.paths["pico_sims"] +  str(int(ch))+"GHz/" + "group3_map_" + str(int(ch))+"GHz.fits"
 		cmbmap=h.read_map(filename,verbose=False)
 		
-		h.write_map(gset.mmfset.map_names["frg"][ch],tempmap-cmbmap,overwrite=True)
-		h.write_map(gset.mmfset.map_names["cmb"][ch],cmbmap,overwrite=True)
+		h.write_map(gset.mmfset.map_fnames["frg"][ch],tempmap-cmbmap,overwrite=True)
+		h.write_map(gset.mmfset.map_fnames["cmb"][ch],cmbmap,overwrite=True)
 
 
 
