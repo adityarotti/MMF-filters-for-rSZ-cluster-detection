@@ -8,6 +8,7 @@ from flat_sky_codes import tangent_plane_analysis as tpa
 from modules.settings import global_mmf_settings as gset
 from settings import constants as cnst
 from cosmology import cosmo_fn
+import unit_conv as uc
 
 
 def extract_tangent_planes(dryrun=False,verbose=False):
