@@ -12,7 +12,7 @@ from settings import constants as cnst
 from modules.settings import global_mmf_settings as gset
 import sz_spec as szspec
 
-class band_pass_filtering(object):
+class sz_spectrum(object):
 
 	def __init__(self,datapath="",szspecpath="",channels=[30,44,70,100,143,217,353,545,857]):
 		if datapath=="":
@@ -30,7 +30,7 @@ class band_pass_filtering(object):
 		self.sz_op=szspec.sz_spectrum(szspecpath=self.szspecpath)
 		self.conv_I2Tcmb=self.sz_op.fn["bb_diffT"](self.channels)
 		self.return_band_pass()
-		self.setup_bp_fn_sz_2d_T()
+		self.setup_fn_sz_2d_T()
 
 	def return_band_pass(self,thr=1.e-6):
 		hfi_im=fits.open(self.datapath + "/HFI_RIMO_R2.00.fits")
@@ -58,7 +58,7 @@ class band_pass_filtering(object):
 			rf=np.linspace(min(plbp_raw[ch][0]),max(plbp_raw[ch][0]),100*len(plbp_raw[ch][0]))
 			self.plbp[ch]=[rf,fn(rf)]
 
-	def setup_bp_fn_sz_2d_T(self,intkind="quintic"):
+	def setup_fn_sz_2d_T(self,intkind="quintic"):
 		# Evaluating the channel normalization for the band pass integrations.
 		self.bp_norm=np.zeros(np.size(self.channels),float)
 		for i,ch in enumerate(self.channels):
@@ -70,13 +70,13 @@ class band_pass_filtering(object):
 			for i,ch in enumerate(self.channels):
 				self.YTeT[i,j]=np.sum(self.plbp[ch][1]*self.sz_op.fn_sz_2d_I(T,self.plbp[ch][0]).flatten())/self.bp_norm[i]
 		
-		self.bp_fn_sz_2d_T=interp2d(self.sz_op.T,self.channels,self.YTeT,kind=intkind,bounds_error=False,fill_value=0.)
+		self.fn_sz_2d_T=interp2d(self.sz_op.T,self.channels,self.YTeT,kind=intkind,bounds_error=False,fill_value=0.)
 
-	def return_bp_sz_sed_template_bank(self,nu,Tmin,Tmax,Tstep):
+	def return_sz_sed_template_bank(self,nu,Tmin,Tmax,Tstep):
 		Te=np.arange(Tmin,Tmax+Tstep,Tstep,dtype="float")
 		bank={}
 		for T in Te:
-			temp=self.bp_fn_sz_2d_T(T,nu)[:,0]
+			temp=self.fn_sz_2d_T(T,nu)[:,0]
 			bank[T]={}
 			for i,ch in enumerate(nu):
 				bank[T][ch]=temp[i]

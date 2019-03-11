@@ -8,7 +8,8 @@ for ich,ch in enumerate(planck_channels):
 pico_nstd = [35.3553, 23.3345, 15.8392, 10.6066, 6.43467, 4.94975, 3.53553, 2.82843, 2.26274, 2.05061, 1.90919, 1.83848, 2.54558, 3.74767, 6.36396, 11.3137, 22.6274, 53.0330, 155.563, 777.817, 7071.07]
 
 paths={}
-planck_data_dir="/mirror/arotti/Planck/"
+planck_data_dir="/Users/adityarotti/Documents/Work/Data/Planck/"
+#planck_data_dir="/mirror/arotti/Planck/"
 paths["planck_mmf3_cat"]=planck_data_dir + "/COM_PCCS_SZ-Catalogs_vPR2/"
 mmf3_cat_file=paths["planck_mmf3_cat"] + "HFI_PCCS_SZ-MMF3_R2.08.fits"
 union_cat_file=paths["planck_mmf3_cat"] + "HFI_PCCS_SZ-union_R2.08.fits"
@@ -17,6 +18,7 @@ esz_cat_2011_file=paths["planck_mmf3_cat"] + "esz_cat_2011.txt"
 datain_dir="/mirror/arotti/simulations/PICO/"
 paths["pico_sims"]=datain_dir + "/CMB_PROBE_2017/"
 paths["reduced_pico_sims"]=datain_dir + "/reduced_data/"
+paths["sz_spec"]="../data/sz_spectra/"
 
 map_fnames={}
 map_fnames["cmb"]={}

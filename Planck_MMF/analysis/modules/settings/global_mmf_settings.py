@@ -4,14 +4,14 @@ import numpy as np
 
 mmfset=None
 
-def setup_mmf_config(dataset="planck",outpath="",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],result_midfix="",gen_paths=True):
+def setup_mmf_config(dataset="planck",outpath="",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],result_midfix="",do_band_pass=True,gen_paths=True):
 	global mmfset
-	mmfset=setup_mmf_analysis(dataset=dataset,outpath=outpath,nside=nside,xsize=xsize,pwc=pwc,channels=channels,chmin=chmin,result_midfix=result_midfix)
+	mmfset=setup_mmf_analysis(dataset=dataset,outpath=outpath,nside=nside,xsize=xsize,pwc=pwc,channels=channels,chmin=chmin,result_midfix=result_midfix,do_band_pass=do_band_pass)
 	if gen_paths:
 		mmfset.init_paths()
 
 class setup_mmf_analysis(object):
-	def __init__(self,dataset="planck",outpath="",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],result_midfix=""):
+	def __init__(self,dataset="planck",outpath="",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],result_midfix="",do_band_pass=True):
 		
 		if dataset=="planck":
 			from experiments import planck
@@ -39,6 +39,7 @@ class setup_mmf_analysis(object):
 		self.pwc=pwc
 		self.outpath=outpath
 		self.result_midfix=result_midfix
+		self.do_band_pass=do_band_pass
 
 		from flat_sky_codes import tangent_plane_analysis as tpa
 		projection_operator=tpa.tangent_plane_setup(self.nside,self.xsize,0.,0.,rescale=1.)

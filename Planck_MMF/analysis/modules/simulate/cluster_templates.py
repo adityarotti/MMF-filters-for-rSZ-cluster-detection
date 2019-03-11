@@ -5,7 +5,7 @@ from astropy.io import fits
 from scipy.interpolate import interp1d
 
 from modules.settings import global_mmf_settings as gset
-from spectral_template import planck_band_pass_sz as plbpsz
+#from spectral_template import planck_band_pass_sz as plbpsz
 from spatial_template import sim_cluster as sc
 from flat_sky_codes  import flat_sky_analysis as fsa
 
@@ -27,12 +27,15 @@ class cluster_spectro_spatial_templates(object):
 		if gen_template:
 			self.gen_template()
 		self.gen_template_ft_bank()
-		#self.sz_op=szsed.sz_spectrum()
-		#self.sz_spec_bank=self.sz_op.return_sz_sed_template_bank(gset.mmfset.channels,self.T_min,self.T_max,self.T_step)
-		self.sz_op=plbpsz.band_pass_filtering()
-		self.sz_spec_bank=self.sz_op.return_bp_sz_sed_template_bank(gset.mmfset.channels,self.T_min,self.T_max,self.T_step)
-		self.sz_op=plbpsz.band_pass_filtering()
-		self.sz_spec_bank=self.sz_op.return_bp_sz_sed_template_bank(gset.mmfset.channels,self.T_min,self.T_max,self.T_step)
+		
+		if gset.mmfset.do_band_pass:
+			from spectral_template import planck_band_pass_sz as szsed
+		else:
+			from spectral_template import sz_spec as szsed
+		
+		self.sz_op=szsed.sz_spectrum()
+		self.sz_spec_bank=self.sz_op.return_sz_sed_template_bank(gset.mmfset.channels,self.T_min,self.T_max,self.T_step)
+		
 		self.setup_fn_yerr_norm()
 		self.setup_channel_beam_filters()
 

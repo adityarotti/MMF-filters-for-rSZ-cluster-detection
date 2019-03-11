@@ -96,7 +96,7 @@ class Y_M_scaling(object):
 
 
 	def return_sz_spec(self,Tc=0.):
-		temp=self.tmplt.sz_op.bp_fn_sz_2d_T(Tc,gset.mmfset.channels)[:,0]
+		temp=self.tmplt.sz_op.fn_sz_2d_T(Tc,gset.mmfset.channels)[:,0]
 		szspec={}
 		for i,ch in enumerate(gset.mmfset.channels):
 			szspec[ch]=temp[i]
