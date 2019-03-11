@@ -5,18 +5,20 @@ from cosmology import cosmo_fn
 from masking import gen_masks as gm
 import multiprocessing as mp
 from simulate import cluster_templates as cltemp
+from simulate.spatial_template import sim_cluster as sc
 from flat_sky_codes import flat_sky_analysis as fsa
 from data_preprocess import get_tangent_planes as gtp
 from flat_sky_codes import tangent_plane_analysis as tpa
 from filters import modular_multi_matched_filter as mmf
 from modules.settings import global_mmf_settings as gset
-from data_preprocess import preprocess_planck_data_esz_cat as ppd
+from data_preprocess import get_esz_cat_pico_tiles as ppd
 from modules.simulate.spatial_template import sz_pressure_profile as szp
 
 class Y_M_scaling(object):
-	def __init__(self):
+	def __init__(self,dtype=["cmb","frg","noise"]):
 		self.xsz_cat=ppd.get_tangent_plane_fnames()
 		#ppd.extract_tangent_planes()
+		self.dtype=dtype
 		self.conv_Y5R500_SPHR500=szp.convert_Ycyl_xR500_Ysph_xR500()
 		self.tmplt=cltemp.cluster_spectro_spatial_templates(T_min=0.,T_max=40.,T_step=0.1,theta500_min=2.,theta500_max=55.,theta_step=1.)
 		self.tmplt.setup_templates()
@@ -26,7 +28,7 @@ class Y_M_scaling(object):
 		self.szspecT0=self.return_sz_spec(Tc=0.)
 		self.idx_list=np.arange(np.size(self.xsz_cat["z"]))
 	
-	def eval_Y500_xray_prior(self,idx,dtype=["cmb","frg","noise"]):
+	def eval_Y500_xray_prior(self,idx):
 		theta500=self.xsz_cat["theta500"][idx]
 		T500=self.xsz_cat["T500"][idx]
 		glon=self.xsz_cat["GLON"][idx]
@@ -35,12 +37,7 @@ class Y_M_scaling(object):
 		projop=tpa.tangent_plane_setup(gset.mmfset.nside,gset.mmfset.xsize,glat,glon,rescale=1.)
 		ix,iy=projop.ang2ij(glon,glat)
 		
-		for iter,mtype in enumerate(dtype):
-			filename=gset.mmfset.paths["tplanes"] + mtype + self.xsz_cat["FILENAME"][idx]
-			if iter==0:
-				data=gtp.return_data(filename)
-			else:
-				data=data + gtp.return_data(filename)
+		data=self.simulate_data(idx)
 		#ps_mask=gtp.return_ps_mask(filename)
 		self.op.get_data_ft(data*self.emask,smwin=5)
 
@@ -71,7 +68,7 @@ class Y_M_scaling(object):
 		projop=tpa.tangent_plane_setup(gset.mmfset.nside,gset.mmfset.xsize,glat,glon,rescale=1.)
 		ix,iy=projop.ang2ij(glon,glat)
 
-		data=gtp.return_data(filename)
+		data=self.simulate_data(idx)
 		ps_mask=gtp.return_ps_mask(filename)
 		self.op.get_data_ft(data*ps_mask*self.emask,smwin=5)
 
@@ -98,9 +95,35 @@ class Y_M_scaling(object):
 
 		return idx,otheta500T0,T500,Y500_T0,Y500_err_T0,Y500_TT,Y500_err_TT
 
+	def simulate_data(self,idx):
+		for iter,mtype in enumerate(self.dtype):
+			filename=gset.mmfset.paths["tplanes"] + mtype + self.xsz_cat["FILENAME"][idx]
+			if iter==0:
+				data=gtp.return_data(filename)
+			else:
+				data=data + gtp.return_data(filename)
+
+		glon=self.xsz_cat["GLON"][idx]
+		glat=self.xsz_cat["GLAT"][idx]
+		redshift=self.xsz_cat["z"][idx]
+		sim_theta500=self.xsz_cat["theta500"][idx]
+		T500=self.xsz_cat["T500"][idx]
+		YSZ_500=self.xsz_cat["YSZ_500"][idx]
+		projop=tpa.tangent_plane_setup(gset.mmfset.nside,gset.mmfset.xsize,glat,glon,rescale=1.)
+		ix,iy=projop.ang2ij(glon,glat)
+		template=sc.gen_field_cluster_template(ix,iy,sim_theta500,npix=gset.mmfset.npix,pixel_size=gset.mmfset.reso,y0=1.,cutoff=5.)
+		sim_Y500=np.sum(template)*(gset.mmfset.reso**2.)*self.conv_Y5R500_SPHR500*((cosmo_fn.dA(redshift)*(np.pi/180./60.))**2.)
+		template=template*YSZ_500/sim_Y500
+		temp_ft=fsa.map2alm(template,gset.mmfset.reso)
+		sim_cluster=np.zeros((np.size(gset.mmfset.channels),gset.mmfset.npix,gset.mmfset.npix),float)
+		szspecT500=self.tmplt.sz_op.fn_sz_2d_T(T500,gset.mmfset.channels)[:,0]
+		for i,ch in enumerate(gset.mmfset.channels):
+			alm=np.copy(temp_ft)*self.tmplt.chfiltr[ch]*szspecT500[i]
+			sim_cluster[i,:,:]=fsa.alm2map(alm,gset.mmfset.reso)
+		return sim_cluster+data
 
 	def return_sz_spec(self,Tc=0.):
-		temp=self.tmplt.sz_op.bp_fn_sz_2d_T(Tc,gset.mmfset.channels)[:,0]
+		temp=self.tmplt.sz_op.fn_sz_2d_T(Tc,gset.mmfset.channels)[:,0]
 		szspec={}
 		for i,ch in enumerate(gset.mmfset.channels):
 			szspec[ch]=temp[i]
