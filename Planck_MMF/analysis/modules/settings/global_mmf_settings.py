@@ -19,6 +19,9 @@ class setup_mmf_analysis(object):
 		if dataset=="planck_psm_sim":
 			from experiments import planck_psm_sim
 			self.__dict__=planck_psm_sim.__dict__.copy()
+		if dataset=="pico":
+			from experiments import pico_sims
+			self.__dict__=pico_sims.__dict__.copy()
 
 		if (channels==[]) & (chmin==[]):
 			self.channels=np.copy(self.planck_channels)
@@ -30,6 +33,8 @@ class setup_mmf_analysis(object):
 
 		self.dataset=dataset
 		self.nside=nside
+		if dataset=="pico":
+			nside=4096
 		self.xsize=xsize
 		self.pwc=pwc
 		self.outpath=outpath

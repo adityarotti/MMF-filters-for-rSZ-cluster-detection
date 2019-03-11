@@ -7,17 +7,12 @@ from flat_sky_codes import tangent_plane_analysis as tpa
 import unit_conv as uc
 
 def get_reduced_pico_sims():
-	for ch in gset.mmfset.pico_channels:
+	for ch in gset.mmfset.all_channels:
 		# Noise
 		filename=gset.mmfset.paths["pico_sims"] + str(int(ch))+"GHz/" + "group13_map_" + str(int(ch))+"GHz.fits"
 		tempmap=h.read_map(filename,verbose=False)
 		h.write_map(gset.mmfset.map_names["noise"][ch],tempmap,overwrite=True)
 		
-		# CMB
-		filename=gset.mmfset.paths["pico_sims"] +  str(int(ch))+"GHz/" + "group3_map_" + str(int(ch))+"GHz.fits"
-		tempmap=h.read_map(filename,verbose=False)
-		h.write_map(gset.mmfset.map_names["cmb"][ch],tempmap,overwrite=True)
-
 		#All sky
 		filename=gset.mmfset.paths["pico_sims"] + str(int(ch))+"GHz/" + "group2_map_" + str(int(ch))+"GHz.fits"
 		tempmap=h.read_map(filename,verbose=False)
@@ -30,7 +25,14 @@ def get_reduced_pico_sims():
 		filename=gset.mmfset.paths["pico_sims"] + str(int(ch))+"GHz/" + "group5_map_" + str(int(ch))+"GHz.fits"
 		tempmap=tempmap-h.read_map(filename,verbose=False)
 		
-		h.write_map(gset.mmfset.map_names["cmbfrg"][ch],tempmap,overwrite=True)
+		# CMB
+		filename=gset.mmfset.paths["pico_sims"] +  str(int(ch))+"GHz/" + "group3_map_" + str(int(ch))+"GHz.fits"
+		cmbmap=h.read_map(filename,verbose=False)
+		
+		h.write_map(gset.mmfset.map_names["frg"][ch],tempmap-cmbmap,overwrite=True)
+		h.write_map(gset.mmfset.map_names["cmb"][ch],cmbmap,overwrite=True)
+
+
 
 def get_random_plane_centers(numplanes=100,minlat=20.,nsideout=8,seed=0):
 	glon,glat=h.pix2ang(nsideout,np.arange(h.nside2npix(nsideout)),lonlat=True)

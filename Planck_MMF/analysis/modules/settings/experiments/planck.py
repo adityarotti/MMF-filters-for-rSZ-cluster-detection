@@ -21,6 +21,11 @@ paths["planck_mmf3_cat"]=datain_dir + "/COM_PCCS_SZ-Catalogs_vPR2/"
 paths["pccs"]=datain_dir + "/PCCS/"
 paths["sz_spec"]="../data/sz_spectra/"
 
+# Cluster catalogue
+mmf3_cat_file=paths["planck_mmf3_cat"] + "HFI_PCCS_SZ-MMF3_R2.08.fits"
+union_cat_file=paths["planck_mmf3_cat"] + "HFI_PCCS_SZ-union_R2.08.fits"
+esz_cat_2011_file=paths["planck_mmf3_cat"] + "esz_cat_2011.txt"
+
 # Planck maps
 map_fnames={}
 map_fnames[30.]=paths["planck_maps"] + "LFI_SkyMap_030-BPassCorrected-field-IQU_2048_R3.00_full.fits"
@@ -36,11 +41,6 @@ map_fnames[857.]=paths["planck_maps"] + "HFI_SkyMap_857-field-Int_2048_R3.00_ful
 # Masks
 gal_mask_name=paths["planck_masks"] + "COM_Mask_PCCS-143-zoneMask_2048_R2.01.fits"
 ps_mask_name=paths["planck_masks"] + "HFI_Mask_PointSrc_2048_R2.00.fits"
-
-# Cluster catalogue
-mmf3_cat_file=paths["planck_mmf3_cat"] + "HFI_PCCS_SZ-MMF3_R2.08.fits"
-union_cat_file=paths["planck_mmf3_cat"] + "HFI_PCCS_SZ-union_R2.08.fits"
-esz_cat_2011_file=paths["planck_mmf3_cat"] + "esz_cat_2011.txt"
 
 # Point source catalogue
 ps_cat_fname={}
