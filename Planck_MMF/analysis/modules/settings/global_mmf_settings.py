@@ -34,7 +34,7 @@ class setup_mmf_analysis(object):
 		self.dataset=dataset
 		self.nside=nside
 		if dataset=="pico":
-			nside=4096
+			self.nside=4096
 		self.xsize=xsize
 		self.pwc=pwc
 		self.outpath=outpath
