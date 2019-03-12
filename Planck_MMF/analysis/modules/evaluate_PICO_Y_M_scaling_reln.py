@@ -37,21 +37,21 @@ class Y_M_scaling(object):
 		projop=tpa.tangent_plane_setup(gset.mmfset.nside,gset.mmfset.xsize,glat,glon,rescale=1.)
 		ix,iy=projop.ang2ij(glon,glat)
 		
+		op=mmf.multi_matched_filter(self.tmplt.sp_ft_bank,self.tmplt.sz_spec_bank,self.tmplt.chfiltr,self.tmplt.fn_yerr_norm)
 		data=self.simulate_data(idx)
-		#ps_mask=gtp.return_ps_mask(filename)
-		self.op.get_data_ft(data*self.emask,smwin=5)
+		op.get_data_ft(data*self.emask,smwin=5)
 
 		template=self.tmplt.gen_template(thetac=theta500)
 		template_ft=fsa.map2alm(np.fft.fftshift(template),gset.mmfset.reso)
 
-		fdata,err=self.op.evaluate_mmf(template_ft,self.szspecT0)
+		fdata,err=op.evaluate_mmf(template_ft,self.szspecT0)
 		yc=max((fdata*self.cmask).ravel())
 		cluster=cltemp.sc.gen_field_cluster_template(ix,iy,theta500,npix=gset.mmfset.npix,pixel_size=gset.mmfset.reso,y0=yc,cutoff=5.)
 		Y500_T0=np.sum(cluster)*(gset.mmfset.reso**2.)*self.conv_Y5R500_SPHR500*((cosmo_fn.dA(redshift)*(np.pi/180./60.))**2.)
 		Y500_err_T0=err*Y500_T0/yc
 
 		szspecTc=self.return_sz_spec(Tc=T500)
-		fdata,err=self.op.evaluate_mmf(template_ft,szspecTc)
+		fdata,err=op.evaluate_mmf(template_ft,szspecTc)
 		yc=max((fdata*self.cmask).ravel())
 		cluster=cltemp.sc.gen_field_cluster_template(ix,iy,theta500,npix=gset.mmfset.npix,pixel_size=gset.mmfset.reso,y0=yc,cutoff=5.)
 		Y500_TT=np.sum(cluster)*(gset.mmfset.reso**2.)*self.conv_Y5R500_SPHR500*((cosmo_fn.dA(redshift)*(np.pi/180./60.))**2.)
