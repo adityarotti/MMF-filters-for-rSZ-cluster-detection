@@ -6,5 +6,5 @@
 /data/template_bank
 !/data/sz_spectra
 !/data/datain
-
+/analysis/.ipynb_checkpoints/
 /results/**/*.fits

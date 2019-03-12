@@ -20,7 +20,6 @@ class Y_M_scaling(object):
 		self.conv_Y5R500_SPHR500=szp.convert_Ycyl_xR500_Ysph_xR500()
 		self.tmplt=cltemp.cluster_spectro_spatial_templates(T_min=0.,T_max=40.,T_step=0.1,theta500_min=2.,theta500_max=55.,theta_step=1.)
 		self.tmplt.setup_templates()
-		self.op=mmf.multi_matched_filter(self.tmplt.sp_ft_bank,self.tmplt.sz_spec_bank,self.tmplt.chfiltr,self.tmplt.fn_yerr_norm)
 		self.cmask=gm.return_center_mask()
 		self.emask=gm.return_edge_apodized_mask(15.,20.)
 		self.szspecT0=self.return_sz_spec(Tc=0.)
@@ -38,19 +37,20 @@ class Y_M_scaling(object):
 
 		data=gtp.return_data(filename)
 		ps_mask=gtp.return_ps_mask(filename)
-		self.op.get_data_ft(data*ps_mask*self.emask,smwin=5)
+		op=mmf.multi_matched_filter(self.tmplt.sp_ft_bank,self.tmplt.sz_spec_bank,self.tmplt.chfiltr,self.tmplt.fn_yerr_norm)
+		op.get_data_ft(data*ps_mask*self.emask,smwin=5)
 
 		template=self.tmplt.gen_template(thetac=theta500)
 		template_ft=fsa.map2alm(np.fft.fftshift(template),gset.mmfset.reso)
 
-		fdata,err=self.op.evaluate_mmf(template_ft,self.szspecT0)
+		fdata,err=op.evaluate_mmf(template_ft,self.szspecT0)
 		yc=max((fdata*self.cmask).ravel())
 		cluster=cltemp.sc.gen_field_cluster_template(ix,iy,theta500,npix=gset.mmfset.npix,pixel_size=gset.mmfset.reso,y0=yc,cutoff=5.)
 		Y500_T0=np.sum(cluster)*(gset.mmfset.reso**2.)*self.conv_Y5R500_SPHR500*((cosmo_fn.dA(redshift)*(np.pi/180./60.))**2.)
 		Y500_err_T0=err*Y500_T0/yc
 
 		szspecTc=self.return_sz_spec(Tc=T500)
-		fdata,err=self.op.evaluate_mmf(template_ft,szspecTc)
+		fdata,err=op.evaluate_mmf(template_ft,szspecTc)
 		yc=max((fdata*self.cmask).ravel())
 		cluster=cltemp.sc.gen_field_cluster_template(ix,iy,theta500,npix=gset.mmfset.npix,pixel_size=gset.mmfset.reso,y0=yc,cutoff=5.)
 		Y500_TT=np.sum(cluster)*(gset.mmfset.reso**2.)*self.conv_Y5R500_SPHR500*((cosmo_fn.dA(redshift)*(np.pi/180./60.))**2.)
@@ -69,9 +69,10 @@ class Y_M_scaling(object):
 
 		data=gtp.return_data(filename)
 		ps_mask=gtp.return_ps_mask(filename)
-		self.op.get_data_ft(data*ps_mask*self.emask,smwin=5)
+		op=mmf.multi_matched_filter(self.tmplt.sp_ft_bank,self.tmplt.sz_spec_bank,self.tmplt.chfiltr,self.tmplt.fn_yerr_norm)
+		op.get_data_ft(data*ps_mask*self.emask,smwin=5)
 
-		err,snr_max0,yc,otheta500T0,ans0=self.op.return_optimal_theta500(Tc=0.,mask_fdata=False)
+		err,snr_max0,yc,otheta500T0,ans0=op.return_optimal_theta500(Tc=0.,mask_fdata=False)
 		cluster=cltemp.sc.gen_field_cluster_template(ix,iy,otheta500T0,npix=gset.mmfset.npix,pixel_size=gset.mmfset.reso,y0=yc,cutoff=5.)
 		Y500_T0=np.sum(cluster)*(gset.mmfset.reso**2.)*self.conv_Y5R500_SPHR500*((cosmo_fn.dA(redshift)*(np.pi/180./60.))**2.)
 		Y500_err_T0=err*Y500_T0/yc
@@ -86,7 +87,7 @@ class Y_M_scaling(object):
 		template=self.tmplt.gen_template(thetac=otheta500T0)
 		template_ft=fsa.map2alm(np.fft.fftshift(template),gset.mmfset.reso)
 		szspecTc=self.return_sz_spec(Tc=T500)
-		fdata,err=self.op.evaluate_mmf(template_ft,szspecTc)
+		fdata,err=op.evaluate_mmf(template_ft,szspecTc)
 		yc=max((fdata*self.cmask).ravel())
 		cluster=cltemp.sc.gen_field_cluster_template(ix,iy,otheta500T0,npix=gset.mmfset.npix,pixel_size=gset.mmfset.reso,y0=yc,cutoff=5.)
 		Y500_TT=np.sum(cluster)*(gset.mmfset.reso**2.)*self.conv_Y5R500_SPHR500*((cosmo_fn.dA(redshift)*(np.pi/180./60.))**2.)

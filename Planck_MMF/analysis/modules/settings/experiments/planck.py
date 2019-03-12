@@ -25,6 +25,8 @@ paths["sz_spec"]="../data/sz_spectra/"
 mmf3_cat_file=paths["planck_mmf3_cat"] + "HFI_PCCS_SZ-MMF3_R2.08.fits"
 union_cat_file=paths["planck_mmf3_cat"] + "HFI_PCCS_SZ-union_R2.08.fits"
 esz_cat_2011_file=paths["planck_mmf3_cat"] + "esz_cat_2011.txt"
+cosmo_cat_2013_ysz_file=paths["planck_mmf3_cat"] + "cosmo_cluster_sample_ysz.fits"
+cosmo_cat_2013_yxray_file=paths["planck_mmf3_cat"] + "cosmo_cluster_sample_yxray.dat"
 
 # Planck maps
 map_fnames={}
