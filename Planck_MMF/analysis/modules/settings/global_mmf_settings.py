@@ -4,22 +4,25 @@ import numpy as np
 
 mmfset=None
 
-def setup_mmf_config(dataset="planck",outpath="",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],result_midfix="",do_band_pass=True,gen_paths=True):
+def setup_mmf_config(dataset="planck_pr3",outpath="",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],result_midfix="",do_band_pass=True,gen_paths=True):
 	global mmfset
 	mmfset=setup_mmf_analysis(dataset=dataset,outpath=outpath,nside=nside,xsize=xsize,pwc=pwc,channels=channels,chmin=chmin,result_midfix=result_midfix,do_band_pass=do_band_pass)
 	if gen_paths:
 		mmfset.init_paths()
 
 class setup_mmf_analysis(object):
-	def __init__(self,dataset="planck",outpath="",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],result_midfix="",do_band_pass=True):
+	def __init__(self,dataset="planck_pr3",outpath="",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],result_midfix="",do_band_pass=True):
 		
-		if dataset=="planck":
-			from experiments import planck
+		if dataset=="planck_pr3":
+			from experiments import planck_pr3 as planck
 			self.__dict__=planck.__dict__.copy()
-		if dataset=="planck_psm_sim":
+		elif dataset=="planck_pr1":
+			from experiments import planck_pr1 as planck
+			self.__dict__=planck.__dict__.copy()
+		elif dataset=="planck_psm_sim":
 			from experiments import planck_psm_sim
 			self.__dict__=planck_psm_sim.__dict__.copy()
-		if dataset=="pico":
+		elif dataset=="pico":
 			from experiments import pico_sims
 			self.__dict__=pico_sims.__dict__.copy()
 
