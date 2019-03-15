@@ -10,14 +10,16 @@ from data_preprocess import get_tangent_planes as gtp
 from simulate import cluster_templates as cltemp
 from masking import gen_masks as gm
 
-outpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF_new/"
-gset.setup_mmf_config(outpath=outpath,gen_paths=True,xsize=10.,chmin=100.)
+outpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/results/planck_pr1/"
+#outpath="/nvme/arotti/mmf_dataout/planck_pr1/mmf_blind/"
+gset.setup_mmf_config(dataset="planck_pr1",outpath=outpath,chmin=100.,xsize=10.,result_midfix="",do_band_pass=True)
 tmplt=cltemp.cluster_spectro_spatial_templates(T_step=1.)
 tmplt.setup_templates()
 mmf_cat=ppd.get_tangent_plane_fnames()
 mmf_cat=ppd.eval_M500_T500_theta500(mmf_cat)
 idx_list=np.arange(np.size(mmf_cat["SNR"]))
-emask=gm.return_edge_apodized_mask()
+#emask=gm.return_edge_apodized_mask(15.,20.)
+emask[:,:]=1.
 op=mmf.multi_matched_filter(tmplt.sp_ft_bank,tmplt.sz_spec_bank,tmplt.chfiltr,tmplt.fn_yerr_norm)
 
 def run_mmf_in_parallel(numprocs):

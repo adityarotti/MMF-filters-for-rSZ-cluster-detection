@@ -13,7 +13,7 @@ fwhm[353.]=4.86 ; fwhm[545.]=4.84 ; fwhm[857.]=4.63
 
 paths={}
 datain_dir="/Users/adityarotti/Documents/Work/Data/Planck/"
-#datain_dir="/nvme/arotti/data/Planck/"
+#datain_dir="/mirror/arotti/Planck/"
 paths["planck_maps"]=datain_dir + "/maps/"
 paths["planck_masks"]=datain_dir + "/masks/"
 paths["planck_bp"]=datain_dir + "/channel_band_passes/"

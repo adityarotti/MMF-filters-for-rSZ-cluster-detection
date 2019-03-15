@@ -164,7 +164,7 @@ class Y_M_scaling(object):
 		return fdata,err
 
 
-	def return_cluster_catalogue(self,idx,Tc=[]):
+	def return_cluster_catalogue(self,idx,Tc=[],snrthr=4.):
 		filename=self.xsz_cat["FILENAME"][idx]
 		theta500=self.xsz_cat["theta500"][idx]
 		T500=self.xsz_cat["TX"][idx]
@@ -178,7 +178,8 @@ class Y_M_scaling(object):
 		data=gtp.return_data(filename)
 		ps_mask=gtp.return_ps_mask(filename)
 		ext_ps_mask=gtp.return_ext_ps_mask(filename)
-		gmask=self.emask*ext_ps_mask
+		gmask=ext_ps_mask*self.emask
+		
 		op=mmf.multi_matched_filter(self.tmplt.sp_ft_bank,self.tmplt.sz_spec_bank,self.tmplt.chfiltr,self.tmplt.fn_yerr_norm)
 		op.get_data_ft(data*ps_mask*self.emask,smwin=5)
 
@@ -202,11 +203,13 @@ class Y_M_scaling(object):
 			fdata,err=op.evaluate_mmf(template_ft,szspecTc)
 			if iteration==-1:
 				fdata0=np.copy(fdata)
+				err0=np.copy(err)
+				data_ft=np.copy(op.data_ft)
 			iteration=iteration+1
 			
 			old_cluster_cnt=new_cluster_cnt
 			snrthrmask[:]=1.
-			while(max((fdata*snrthrmask*gmask/err).ravel())>4.):
+			while(max((fdata*snrthrmask*gmask/err).ravel())>snrthr):
 				clcnt=clcnt+1
 				max_snr=max((fdata*snrthrmask*gmask/err).ravel())
 				x,y=np.where(fdata*snrthrmask*gmask/err == max_snr)
@@ -225,7 +228,11 @@ class Y_M_scaling(object):
 				cluster_model_ft=fsa.map2alm(cluster_model,gset.mmfset.reso)
 				for i, ch in enumerate(gset.mmfset.channels):
 					multi_freq_cluster_model[i,]=fsa.alm2map(cluster_model_ft*op.chfiltr[ch]*op.sz_spec_bank[0][ch],gset.mmfset.reso)
-		return fdata0,err,fdata
+	
+		op.data_ft=data_ft
+		fdata_true,err_true=op.evaluate_mmf(template_ft,szspecTc)
+		
+		return fdata_true,err_true,fdata #,multi_freq_cluster_model
 
 
 	def gen_peak_mask(self,ix,iy,radius):
@@ -235,3 +242,26 @@ class Y_M_scaling(object):
 		distance=np.sqrt((x-ix)**2. +(y-iy)**2.)*gset.mmfset.reso
 		tmask[distance<=radius]=0
 		return tmask
+
+
+def write_catalogue(data,filename=[]):
+	dtype=["idx","theta500","T500","YSZ_500","YSZ_500_err","YSZ_500_Tc","YSZ_500_err_Tc"]
+	units=["I4","arcminutes","keV","D_A^2 Y500 = Mpc**2","D_A^2 Y500 = D_A^2 Y500 = Mpc**2","D_A^2 Y500 = Mpc**2","D_A^2 Y500 = Mpc**2","D_A^2 Y500 = Mpc**2"]
+	
+	data_dic={}
+	for i, d in enumerate(dtype):
+		data_dic[d]=data[:,i]
+		
+	c=[]
+	for idx,key in enumerate(dtype):
+		c=np.append(c,fits.Column(name=key, format='E',unit=units[idx], array=data_dic[key]))
+	
+	hdulist = fits.BinTableHDU.from_columns(c)
+	
+	if filename==[]:
+		filename=gset.mmfset.paths["result_data"] + "ysz_cat_with_rsz_correction.fits"
+	else:
+		filename=gset.mmfset.paths["result_data"] + filename
+	
+	hdulist.writeto(filename,overwrite="True")
+	return data_dic
