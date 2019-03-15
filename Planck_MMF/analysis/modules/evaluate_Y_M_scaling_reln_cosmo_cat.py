@@ -265,3 +265,16 @@ def write_catalogue(data,filename=[]):
 	
 	hdulist.writeto(filename,overwrite="True")
 	return data_dic
+
+def read_catalogue(filename):
+	filename=gset.mmfset.paths["result_data"] + filename
+	cat=fits.open(gset.mmfset.cosmo_cat_2013_ysz_file)
+	keys=cat[1].header.keys()
+	fkeys=[k for k in keys if "TTYPE" in k]
+	fields=[cat[1].header[tkeys] for tkeys in fkeys]
+	
+	ysz_cat={}
+	for n in fields:
+		ysz_cat[n]=cat[1].data.field(n).flatten()
+	
+	return ysz_cat
