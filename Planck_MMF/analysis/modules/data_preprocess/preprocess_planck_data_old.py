@@ -1,3 +1,9 @@
+##################################################################################################
+# Author: Aditya Rotti, Jodrell Bank Center for Astrophysics, University of Manchester           #
+# Date created:  15 January September 2019     				 		                             #
+# Date modified: 16 March 2019								 								     #
+##################################################################################################
+
 import os
 import numpy as np
 import healpy as h

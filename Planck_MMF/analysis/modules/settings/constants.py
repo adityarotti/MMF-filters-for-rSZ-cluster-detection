@@ -1,3 +1,9 @@
+##################################################################################################
+# Author: Aditya Rotti, Jodrell Bank Center for Astrophysics, University of Manchester           #
+# Date created:  15 January September 2019     				 		                             #
+# Date modified: 16 March 2019								 								     #
+##################################################################################################
+
 T_cmb=2.726      			# Kelvin
 k_boltzmann=1.38064852e-23  # Boltzmann constant
 h_planck=6.62607004e-34     # Planck constant

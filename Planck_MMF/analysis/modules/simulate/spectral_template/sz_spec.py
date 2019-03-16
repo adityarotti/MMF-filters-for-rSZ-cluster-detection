@@ -1,3 +1,9 @@
+##################################################################################################
+# Author: Aditya Rotti, Jodrell Bank Center for Astrophysics, University of Manchester           #
+# Date created:  15 January September 2019     				 		                             #
+# Date modified: 16 March 2019								 								     #
+##################################################################################################
+
 import numpy as np
 import sympy as sp
 from scipy.interpolate import interp1d

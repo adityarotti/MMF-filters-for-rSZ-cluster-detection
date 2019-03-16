@@ -1,8 +1,9 @@
 ##################################################################################################
 # Author: Aditya Rotti, Jodrell Bank Center for Astrophysics, University of Manchester           #
-# Date created: 27 September 2018      															 #
-# Date modified: 14 November 2018																 #
+# Date created:  15 January September 2019     				 		                             #
+# Date modified: 16 March 2019								 								     #
 ##################################################################################################
+
 import numpy as np
 import sympy as sp
 from astropy.io import fits

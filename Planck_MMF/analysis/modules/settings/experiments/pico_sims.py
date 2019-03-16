@@ -1,3 +1,9 @@
+##################################################################################################
+# Author: Aditya Rotti, Jodrell Bank Center for Astrophysics, University of Manchester           #
+# Date created:  15 January September 2019     				 		                             #
+# Date modified: 16 March 2019								 								     #
+##################################################################################################
+
 all_channels=[21.,25.,30.,36.,43.,52.,62.,75.,90.,110.,130.,155.,185.,225.,270.,320.,385.,460.,555.,665.,800.]
 
 fwhm=[40.9,34.1,28.4,23.7,19.7,16.4,13.7,11.4,9.5,7.9,6.6,5.5,4.6,3.8,3.2,2.7,2.2,1.8,1.5,1.3,1.1]
@@ -18,7 +24,6 @@ esz_cat_2011_file=paths["planck_mmf3_cat"] + "esz_cat_2011.txt"
 datain_dir="/mirror/arotti/simulations/PICO/"
 paths["pico_sims"]=datain_dir + "/CMB_PROBE_2017/"
 paths["reduced_pico_sims"]=datain_dir + "/reduced_data/"
-paths["sz_spec"]="../data/sz_spectra/"
 
 map_fnames={}
 map_fnames["cmb"]={}

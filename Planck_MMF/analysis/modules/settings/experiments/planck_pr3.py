@@ -1,3 +1,9 @@
+##################################################################################################
+# Author: Aditya Rotti, Jodrell Bank Center for Astrophysics, University of Manchester           #
+# Date created:  15 January September 2019     				 		                             #
+# Date modified: 16 March 2019								 								     #
+##################################################################################################
+
 all_channels=[30.,44.,70.,100.,143.,217.,353.,545.,857.]
 
 # From Planck SZ paper
@@ -19,7 +25,6 @@ paths["planck_masks"]=datain_dir + "/masks/"
 paths["planck_bp"]=datain_dir + "/channel_band_passes/"
 paths["planck_mmf3_cat"]=datain_dir + "/COM_PCCS_SZ-Catalogs_vPR2/"
 paths["pccs"]=datain_dir + "/PCCS/"
-paths["sz_spec"]="../data/sz_spectra/"
 
 # Cluster catalogue
 mmf3_cat_file=paths["planck_mmf3_cat"] + "HFI_PCCS_SZ-MMF3_R2.08.fits"

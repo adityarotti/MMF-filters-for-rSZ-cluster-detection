@@ -1,3 +1,9 @@
+##################################################################################################
+# Author: Aditya Rotti, Jodrell Bank Center for Astrophysics, University of Manchester           #
+# Date created:  15 January September 2019     				 		                             #
+# Date modified: 16 March 2019								 								     #
+##################################################################################################
+
 all_channels=[30.,44.,70.,100.,143.,217.,353.,545.,857.]
 
 # From Planck SZ paper
@@ -7,14 +13,13 @@ fwhm[100.]=9.66 ; fwhm[143.]=7.27 ; fwhm[217.]=5.01
 fwhm[353.]=4.86 ; fwhm[545.]=4.84 ; fwhm[857.]=4.63
 
 paths={}
-datain_dir="/Users/adityarotti/Documents/Work/Data/Planck/"
-#datain_dir="/nvme/arotti/data/Planck/"
+#datain_dir="/Users/adityarotti/Documents/Work/Data/Planck/"
+datain_dir="/nvme/arotti/data/Planck/"
 paths["planck_maps"]=datain_dir + "/maps/"
 paths["planck_masks"]=datain_dir + "/masks/"
 paths["planck_bp"]=datain_dir + "/channel_band_passes/"
 paths["planck_mmf3_cat"]=datain_dir + "/COM_PCCS_SZ-Catalogs_vPR2/"
 paths["pccs"]=datain_dir + "/PCCS/"
-paths["sz_spec"]="../data/sz_spectra/"
 
 # Planck PSM simulations maps
 map_fnames={}

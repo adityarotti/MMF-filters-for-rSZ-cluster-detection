@@ -1,3 +1,9 @@
+##################################################################################################
+# Author: Aditya Rotti, Jodrell Bank Center for Astrophysics, University of Manchester           #
+# Date created:  15 January September 2019     				 		                             #
+# Date modified: 16 March 2019								 								     #
+##################################################################################################
+
 import os
 import numpy as np
 from astropy.io import fits
@@ -278,3 +284,14 @@ def read_catalogue(filename):
 		ysz_cat[n]=cat[1].data.field(n).flatten()
 	
 	return ysz_cat
+
+def return_log_err(gauss_mean,gauss_err,num_samples=100000,ignore_negatives=True):
+    logerr=np.zeros_like(gauss_mean)
+    for idx, mu in enumerate(gauss_mean):
+        x=np.random.normal(mu,gauss_err[idx],num_samples)
+        if ignore_negatives:
+            while np.any(x<0):
+                neg_idx=np.where(x<0)[0]
+                x[neg_idx]=np.random.normal(mu,gauss_err[idx],np.size(neg_idx))
+        logerr[idx]=np.std(log10(x))
+    return logerr
