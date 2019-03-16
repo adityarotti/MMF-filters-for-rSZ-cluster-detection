@@ -4,14 +4,14 @@ import numpy as np
 
 mmfset=None
 
-def setup_mmf_config(dataset="planck_pr3",outpath="",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],result_midfix="",do_band_pass=True,gen_paths=True):
+def setup_mmf_config(outpath,tempdatapath,dataset="planck_pr3",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],do_band_pass=True,gen_paths=True):
 	global mmfset
-	mmfset=setup_mmf_analysis(dataset=dataset,outpath=outpath,nside=nside,xsize=xsize,pwc=pwc,channels=channels,chmin=chmin,result_midfix=result_midfix,do_band_pass=do_band_pass)
+	mmfset=setup_mmf_analysis(dataset=dataset,nside=nside,xsize=xsize,pwc=pwc,channels=channels,chmin=chmin,do_band_pass=do_band_pass,outpath=outpath,tempdatapath=tempdatapath)
 	if gen_paths:
 		mmfset.init_paths()
 
 class setup_mmf_analysis(object):
-	def __init__(self,dataset="planck_pr3",outpath="",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],result_midfix="",do_band_pass=True):
+	def __init__(self,dataset="planck_pr3",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],do_band_pass=True,outpath="",tempdatapath=""):
 		
 		if dataset=="planck_pr3":
 			from experiments import planck_pr3 as planck
@@ -38,10 +38,11 @@ class setup_mmf_analysis(object):
 		self.nside=nside
 		if dataset=="pico":
 			self.nside=4096
+			
 		self.xsize=xsize
 		self.pwc=pwc
 		self.outpath=outpath
-		self.result_midfix=result_midfix
+		self.tempdatapath=tempdatapath
 		self.do_band_pass=do_band_pass
 
 		from flat_sky_codes import tangent_plane_analysis as tpa
@@ -51,20 +52,17 @@ class setup_mmf_analysis(object):
 
 		self.mask_planck_maps=True
 		self.mask_tangent_planes=True
-
-		# Setting dataout paths
-		self.paths["templates"]=self.outpath + "/data/template_bank/" + str(int(xsize)) + "deg_patches/"
-		self.paths["tplanes"]=self.outpath + "/data/tangent_planes/" + str(int(xsize)) + "deg_patches/"
+		self.paths["sz_spec"]=os.path.abspath("../modules/simulate/spectral_template/sz_spectra/")
+		
+		# Setting tempdataout paths
+		self.tempdatapath=self.tempdatapath + str(int(xsize)) + "deg_patches/"
+		self.paths["templates"]=self.tempdatapath + "/template_bank/"
+		self.paths["tplanes"]=self.tempdatapath + "/tangent_planes/"
 
 		# Setting result paths
-		if self.result_midfix=="":
-			self.result_path=self.outpath + "/results/" + str(int(xsize)) + "deg_patches/"
-		else:
-			self.result_path=self.outpath + "/results/" + "/" + self.result_midfix + "/" + str(int(xsize)) + "deg_patches/"
-
+		self.result_path=self.outpath + str(int(xsize)) + "deg_patches/"
 		self.paths["result_data"]=self.result_path + "/data/"
 		self.paths["result_figs"]=self.result_path + "/figs/"
-
 
 		# This ensures thet the point source masks from the low frequency channels are ignored.
 		self.ps_mask_weights={}
