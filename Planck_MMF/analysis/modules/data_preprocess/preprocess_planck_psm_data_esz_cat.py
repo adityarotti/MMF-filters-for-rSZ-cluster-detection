@@ -19,7 +19,7 @@ def extract_tangent_planes(gen_mask=True,verbose=False,do_data=True,do_mask=True
 			print "Catalogue size: ", np.size(xsz_cat["z"])
 		tfname=[None]*np.size(xsz_cat["z"])
 
-		for ich,ch in enumerate(gset.mmfset.planck_channels):
+		for ich,ch in enumerate(gset.mmfset.all_channels):
 			if verbose:
 				print "Working on extraction tangent planes from " + str(ch) + " GHz maps"
 			chmap=h.read_map(gset.mmfset.map_fnames[ch],0,verbose=False)
@@ -41,14 +41,14 @@ def extract_tangent_planes(gen_mask=True,verbose=False,do_data=True,do_mask=True
 					hdu0=fits.PrimaryHDU()
 					hdu_ch = fits.ImageHDU()
 					hdu_ch.header["EXTNAME"]="Channels"
-					hdu_ch.data=gset.mmfset.planck_channels
+					hdu_ch.data=gset.mmfset.all_channels
 					hdu_map = fits.ImageHDU()
 					hdu_map.header["EXTNAME"]="Data tangent plane"
 					hdu_map.header["XYsize"]=str(gset.mmfset.xsize) + " degrees"
 					hdu_map.header["Reso"]=str(gset.mmfset.reso) + " arcminutes"
 					hdu_map.header["GLON"]=str(round(glon,4)) + " degrees"
 					hdu_map.header["GLAT"]=str(round(glat,4)) + " degrees"
-					null_data=np.zeros((np.size(gset.mmfset.planck_channels),gset.mmfset.npix,gset.mmfset.npix),float)
+					null_data=np.zeros((np.size(gset.mmfset.all_channels),gset.mmfset.npix,gset.mmfset.npix),float)
 					null_data[ich,:,:]=timage
 					hdu_map.data=null_data
 					hdu=fits.HDUList([hdu0,hdu_ch,hdu_map])
@@ -93,7 +93,7 @@ def gen_ps_mask(snrthr=10.,ps_cutoff=3.,verbose=False,gen_mask=True):
 		mask=np.ones(h.nside2npix(gset.mmfset.nside),float)
 		#chmask=np.ones((np.size(gset.mmfset.channels),h.nside2npix(gset.mmfset.nside)),float)
 		chmask=np.ones(h.nside2npix(gset.mmfset.nside),float)
-		for ich,ch in enumerate(gset.mmfset.planck_channels):
+		for ich,ch in enumerate(gset.mmfset.all_channels):
 			chmask[:]=1.
 			f=fits.open(gset.mmfset.ps_cat_fname[ch])
 			radius=gset.mmfset.ps_mask_weights[ch]*(ps_cutoff/np.sqrt(8.*np.log(2.)))*(gset.mmfset.fwhm[ch]/60.)*np.pi/180.

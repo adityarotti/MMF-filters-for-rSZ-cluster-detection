@@ -47,7 +47,7 @@
 \begin{document}
 
 \title[Relativistic temperature corrections in tSZ analyses]
-{A high significance detection of rSZ effect in Planck clusters}
+{A careful reanalysis of cluster number count on Planck}
 
 \author{Aditya Rotti et. al.}
 \email[E-mail: ]{aditya.rotti@manchester.ac.uk}
@@ -78,12 +78,9 @@ The University of Manchester, Manchester, M13 9PL, U.K.}
 
 \maketitle
 
-
-\section{Introduction}
-\section{Validation on simulations}
-We use the Planck ESZ catalougue. We use the information on location, size $R_{500}$ and the X-ray temperature $T_X$ of the clusters as prior information for the analysis. We use PSM to simulate a realistic realization of the Planck sky which includes CMB, foregrounds and instrument noise and convolved with appropriate gaussian symmetric instrument beams. We then simulate the clusters with location and characteristic given in the ESZ Planck cluster catalogue. We assume the UPP model for the modeling the spatial profile of the cluster, while the frequency space SZ spectrum is evaluated using SZ pack. The cluster model is convolved with the instrument model, the Planck band pass function and the instrument beam for each of the Planck channels. We then add this thermal SZ signal in the to the sky simulations.
-
-On performing a blind MMF analysis, the inferred optical cluster size is on average 50\% bigger than the size estimates provided by X-ray measurements of the cluster. This hampers the detection of the rSZ detection. We now study the simulated thermal SZ data by first running a blind analysis and searching for rSZ effects and then running the MMF analysis assuming the true cluster parameters are known. In simulation we have complete control over the parameters. In analysis of real data we assume that the X-ray measurements provide the most accurate estimates of the cluster size.
+\include{sections/introduction}
+\include{sections/mmf_analysis}
+\include{sections/scaling_laws_planck}
 
 \bibliography{bib}
 \end{document}

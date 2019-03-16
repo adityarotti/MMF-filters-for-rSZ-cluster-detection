@@ -27,10 +27,10 @@ class setup_mmf_analysis(object):
 			self.__dict__=pico_sims.__dict__.copy()
 
 		if (channels==[]) & (chmin==[]):
-			self.channels=np.copy(self.planck_channels)
+			self.channels=np.copy(self.all_channels)
 		elif (channels==[]):
-			chmin_idx=np.where(np.array(self.planck_channels)==chmin)[0][0]
-			self.channels=np.copy(self.planck_channels[chmin_idx:])
+			chmin_idx=np.where(np.array(self.all_channels)==chmin)[0][0]
+			self.channels=np.copy(self.all_channels[chmin_idx:])
 		else:
 			self.channels=channels
 
@@ -68,7 +68,7 @@ class setup_mmf_analysis(object):
 
 		# This ensures thet the point source masks from the low frequency channels are ignored.
 		self.ps_mask_weights={}
-		for ch in self.planck_channels:
+		for ch in self.all_channels:
 			self.ps_mask_weights[ch]=1.
 			if ch<100.:
 				self.ps_mask_weights[ch]=0.

@@ -14,7 +14,7 @@ npix=projection_operator.npix
 mask_planck_maps=True
 mask_tangent_planes=True
 
-channels=np.copy(planck_channels)
+channels=np.copy(all_channels)
 channels=channels[3:]
 
 ps_mask_weights={}

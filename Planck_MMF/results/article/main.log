@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  7 MAR 2019 15:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  16 MAR 2019 12:21
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -269,13 +269,15 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package color Info: Driver file: pdftex.def on input line 147.
 )
-(./main.aux)
+(./main.aux (./sections/introduction.aux) (./sections/mmf_analysis.aux)
+(./sections/scaling_laws_planck.aux))
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 47.
 LaTeX Font Info:    Try loading font information for OML+txmi on input line 47.
 
- (/usr/local/texlive/2017/texmf-dist/tex/latex/txfonts/omltxmi.fd
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/txfonts/omltxmi.fd
 File: omltxmi.fd 2000/12/15 v3.1
 )
 LaTeX Font Info:    ... okay on input line 47.
@@ -401,32 +403,49 @@ File: utxsyc.fd 2000/12/15 v3.1
 Class revtex4 Warning: If you want your PACS to appear in your output, use docu
 ment class option showpacs.
 
+\openout2 = `sections/introduction.aux'.
+
+(./sections/introduction.tex) [1{/usr/local/texlive/2017/texmf-var/fonts/map/pd
+ftex/updmap/pdftex.map}
+\@writefile{toc}{\contentsline {section}{\numberline {}Introduction}{1}{}}
+]
+\openout2 = `sections/mmf_analysis.aux'.
+
+ (./sections/mmf_analysis.tex) [2
+\@writefile{toc}{\contentsline {section}{\numberline {}MMF analysis setup}{2}{}
+}
+]
+\openout2 = `sections/scaling_laws_planck.aux'.
+
+ (./sections/scaling_laws_planck.tex) [3
+\@writefile{toc}{\contentsline {section}{\numberline {}Scaling relations}{3}{}}
+
+]
 No file main.bbl.
-LaTeX Font Info:    Try loading font information for OT1+txtt on input line 89.
+LaTeX Font Info:    Try loading font information for OT1+txtt on input line 86.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/txfonts/ot1txtt.fd
 File: ot1txtt.fd 2000/12/15 v3.1
-) [1{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./
-main.aux) ) 
+) [4]
+(./main.aux (./sections/introduction.aux) (./sections/mmf_analysis.aux)
+(./sections/scaling_laws_planck.aux)) ) 
 Here is how much of TeX's memory you used:
- 4523 strings out of 492995
- 58445 string characters out of 6132704
- 129433 words of memory out of 5000000
- 7990 multiletter control sequences out of 15000+600000
- 32991 words of font info for 84 fonts, out of 8000000 for 9000
+ 4549 strings out of 492995
+ 59090 string characters out of 6132704
+ 121327 words of memory out of 5000000
+ 7993 multiletter control sequences out of 15000+600000
+ 33229 words of font info for 85 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,6n,26p,828b,270s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/base/8r.enc}</us
-r/local/texlive/2017/texmf-dist/fonts/type1/public/txfonts/rtxb.pfb></usr/local
-/texlive/2017/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb></usr/local/texliv
-e/2017/texmf-dist/fonts/type1/public/txfonts/txsy.pfb></usr/local/texlive/2017/
-texmf-dist/fonts/type1/public/txfonts/txtt.pfb></usr/local/texlive/2017/texmf-d
-ist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/
-type1/urw/times/utmr8a.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/
-times/utmri8a.pfb>
-Output written on main.pdf (1 page, 51098 bytes).
+ 39i,6n,26p,236b,270s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2017/texmf-dist/font
+s/enc/dvips/base/8r.enc}</usr/local/texlive/2017/texmf-dist/fonts/type1/public/
+txfonts/txsy.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/txfonts
+/txtt.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/utmb8a.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/loca
+l/texlive/2017/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on main.pdf (4 pages, 45664 bytes).
 PDF statistics:
- 37 PDF objects out of 1000 (max. 8388607)
+ 38 PDF objects out of 1000 (max. 8388607)
  26 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)

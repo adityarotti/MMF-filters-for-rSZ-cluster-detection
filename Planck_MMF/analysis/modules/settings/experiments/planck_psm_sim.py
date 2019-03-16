@@ -1,4 +1,4 @@
-planck_channels=[30.,44.,70.,100.,143.,217.,353.,545.,857.]
+all_channels=[30.,44.,70.,100.,143.,217.,353.,545.,857.]
 
 # From Planck SZ paper
 fwhm={} # Arcminutes
@@ -20,7 +20,7 @@ paths["sz_spec"]="../data/sz_spectra/"
 map_fnames={}
 noise_map_fnames={}
 psm_map_dir="/Users/adityarotti/Documents/Work/Data/Planck_PSM_sims/"
-for ch in planck_channels:
+for ch in all_channels:
 	map_fnames[ch]=psm_map_dir + "group2_map_" + str(int(ch)) + "GHz.fits"
 	noise_map_fnames[ch]=psm_map_dir + "group8_map_" + str(int(ch)) + "GHz.fits"
 

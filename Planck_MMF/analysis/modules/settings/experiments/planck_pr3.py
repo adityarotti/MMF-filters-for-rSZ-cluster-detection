@@ -1,4 +1,4 @@
-planck_channels=[30.,44.,70.,100.,143.,217.,353.,545.,857.]
+all_channels=[30.,44.,70.,100.,143.,217.,353.,545.,857.]
 
 # From Planck SZ paper
 fwhm={} # Arcminutes

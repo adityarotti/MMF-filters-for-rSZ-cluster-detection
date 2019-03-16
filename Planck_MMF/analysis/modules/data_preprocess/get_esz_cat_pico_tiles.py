@@ -17,7 +17,7 @@ def extract_tangent_planes(dryrun=False,verbose=False):
 	
 	if dryrun:
 		for mtype in gset.mmfset.map_fnames.keys():
-			for ich, ch in enumerate(gset.mmfset.planck_channels):
+			for ich, ch in enumerate(gset.mmfset.all_channels):
 				#print gset.mmfset.map_fnames[mtype][ch]
 				print ch,uc.conv_uKTRJ_KTBB(ch)
 				for idx,fname_suffix in enumerate(xsz_cat["FILENAME"]):
@@ -25,7 +25,7 @@ def extract_tangent_planes(dryrun=False,verbose=False):
 					print filename
 	else:
 		for mtype in gset.mmfset.map_fnames.keys():
-			for ich, ch in enumerate(gset.mmfset.planck_channels):
+			for ich, ch in enumerate(gset.mmfset.all_channels):
 				#print gset.mmfset.map_fnames[mtype][ch]
 				chmap=h.read_map(gset.mmfset.map_fnames[mtype][ch],0,verbose=False)*uc.conv_uKTRJ_KTBB(ch)
 				for idx,fname_suffix in enumerate(xsz_cat["FILENAME"]):
