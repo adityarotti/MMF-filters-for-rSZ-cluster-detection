@@ -16,7 +16,6 @@ from settings import constants as cnst
 from cosmology import cosmo_fn
 import unit_conv as uc
 
-
 def extract_tangent_planes(dryrun=False,verbose=False):
 	
 	xsz_cat=get_tangent_plane_fnames()
@@ -62,7 +61,6 @@ def extract_tangent_planes(dryrun=False,verbose=False):
 						hdu=fits.HDUList([hdu0,hdu_ch,hdu_map])
 						hdu.writeto(filename)
 
-
 def get_tangent_plane_fnames():
     xsz_cat=get_esz_catalogue()
 
@@ -75,7 +73,6 @@ def get_tangent_plane_fnames():
 
 	xsz_cat["FILENAME"]=tfname
     return xsz_cat
-
 
 def get_esz_catalogue():
 	dtype=["T500","T500_err","z","Mg500","Mg500_err","M500","M500_err","RA","DEC","R500","YSZ_500","YSZ_500_err","YX_500","YX_500_err"]
@@ -101,7 +98,6 @@ def get_esz_catalogue():
 	xsz_cat["YSZ_500_err"]=xsz_cat["YSZ_500_err"]/1e4
 	
 	return xsz_cat
-
 
 def return_tangent_planes(glon,glat,gen_mask=True):
 	projop=tpa.tangent_plane_setup(gset.mmfset.nside,gset.mmfset.xsize,glat,glon,rescale=1.)

@@ -87,7 +87,6 @@ def extract_tangent_planes(snrthr=6.,cosmo_flag=True,zknown=True,gen_mask=True,v
 			timage=projop.get_tangent_plane(chmap)
 			hdu_mask.data=timage
 			fits.append(filename,hdu_mask.data,hdu_mask.header)
-	#return mmf3
 
 def gen_ps_mask(snrthr=10.,ps_cutoff=3.,verbose=False,gen_mask=True):
 	filename=gset.mmfset.paths["planck_masks"] + "mmf3_ps_snr" + str(int(ps_cutoff)) + "_mask.fits"
@@ -124,14 +123,6 @@ def gen_ps_mask(snrthr=10.,ps_cutoff=3.,verbose=False,gen_mask=True):
 
 	return mask
 
-# This is obsolete as the point source mask map provided
-# on the legacy archive also mask some of the clusters.
-def return_ps_mask(return_gal_mask=False,idx=0):
-	mask=np.ones(h.nside2npix(gset.mmfset.nside),float)
-	for i in range(6):
-		mask=mask*h.read_map(gset.mmfset.ps_mask_name,i,verbose=False)
-	return mask
-
 def get_tangent_plane_fnames(snrthr=6.,cosmo_flag=True,zknown=True):
     mmf3=get_mmf3_catalogue(snrthr=snrthr,cosmo_flag=cosmo_flag,zknown=True)
 
@@ -142,7 +133,6 @@ def get_tangent_plane_fnames(snrthr=6.,cosmo_flag=True,zknown=True):
 
 	mmf3["FILENAME"]=tfname
     return mmf3
-
 
 def get_mmf3_catalogue(snrthr=6.,cosmo_flag=True,zknown=True):
     ints_sample = fits.open(gset.mmfset.union_cat_file)
@@ -199,7 +189,6 @@ def get_mmf3_catalogue(snrthr=6.,cosmo_flag=True,zknown=True):
 
     return mmf3
 
-
 def eval_M500_T500_theta500(clcat):
 	Y500=np.zeros(np.size(clcat["Y5R500"]),float)
 	M500=np.zeros(np.size(clcat["Y5R500"]),float)
@@ -228,3 +217,11 @@ def return_tangent_planes(glon,glat,gen_mask=True):
 	chmap=gen_ps_mask(ps_cutoff=5.,gen_mask=gen_mask)
 	ext_ps_mask=projop.get_tangent_plane(chmap)
 	return data,ps_mask,ext_ps_mask
+
+# This is obsolete as the point source mask map provided
+# on the legacy archive also mask some of the clusters.
+def return_ps_mask(return_gal_mask=False,idx=0):
+	mask=np.ones(h.nside2npix(gset.mmfset.nside),float)
+	for i in range(6):
+		mask=mask*h.read_map(gset.mmfset.ps_mask_name,i,verbose=False)
+	return mask

@@ -126,14 +126,6 @@ def gen_ps_mask(snrthr=10.,ps_cutoff=3.,verbose=False,gen_mask=True):
 
 	return mask
 
-# This is obsolete as the point source mask map provided
-# on the legacy archive also mask some of the clusters.
-def return_ps_mask(return_gal_mask=False,idx=0):
-	mask=np.ones(h.nside2npix(gset.mmfset.nside),float)
-	for i in range(6):
-		mask=mask*h.read_map(gset.mmfset.ps_mask_name,i,verbose=False)
-	return mask
-
 def get_tangent_plane_fnames():
     xsz_cat=get_esz_catalogue()
 
@@ -146,7 +138,6 @@ def get_tangent_plane_fnames():
 
 	xsz_cat["FILENAME"]=tfname
     return xsz_cat
-
 
 def get_esz_catalogue():
 	dtype=["T500","T500_err","z","Mg500","Mg500_err","M500","M500_err","RA","DEC","R500","YSZ_500","YSZ_500_err","YX_500","YX_500_err"]
@@ -173,7 +164,6 @@ def get_esz_catalogue():
 	
 	return xsz_cat
 
-
 def return_tangent_planes(glon,glat,gen_mask=True):
 	projop=tpa.tangent_plane_setup(gset.mmfset.nside,gset.mmfset.xsize,glat,glon,rescale=1.)
 	data=np.zeros((np.size(gset.mmfset.channels),gset.mmfset.npix,gset.mmfset.npix),float)
@@ -186,3 +176,11 @@ def return_tangent_planes(glon,glat,gen_mask=True):
 	chmap=gen_ps_mask(ps_cutoff=5.,gen_mask=gen_mask)
 	ext_ps_mask=projop.get_tangent_plane(chmap)
 	return data,ps_mask,ext_ps_mask
+
+# This is obsolete as the point source mask map provided
+# on the legacy archive also mask some of the clusters.
+def return_ps_mask(return_gal_mask=False,idx=0):
+	mask=np.ones(h.nside2npix(gset.mmfset.nside),float)
+	for i in range(6):
+		mask=mask*h.read_map(gset.mmfset.ps_mask_name,i,verbose=False)
+	return mask

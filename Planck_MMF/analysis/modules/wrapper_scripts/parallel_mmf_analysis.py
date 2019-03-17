@@ -6,8 +6,6 @@
 
 import numpy as np
 import multiprocessing as mp
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-
 from astropy.io import fits
 from settings import global_mmf_settings as gset
 from filters import modular_multi_matched_filter as mmf

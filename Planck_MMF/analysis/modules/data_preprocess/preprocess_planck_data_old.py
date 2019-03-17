@@ -103,14 +103,6 @@ def gen_ps_mask(snrthr=10.,ps_cutoff=3.,verbose=False):
 		
     return mask
 
-# This is obsolete as the point source mask map provided
-# on the legacy archive also mask some of the clusters.
-def return_ps_mask(return_gal_mask=False,idx=0):
-	mask=np.ones(h.nside2npix(gset.mmfset.nside),float)
-	for i in range(6):
-		mask=mask*h.read_map(gset.mmfset.ps_mask_name,i,verbose=False)
-	return mask
-
 def get_tangent_plane_fnames(snrthr=6.,cosmo_flag=True,zknown=True):
     mmf3=get_mmf3_catalogue(snrthr=snrthr,cosmo_flag=cosmo_flag,zknown=True)
 
@@ -121,7 +113,6 @@ def get_tangent_plane_fnames(snrthr=6.,cosmo_flag=True,zknown=True):
 
 	mmf3["FILENAME"]=tfname
     return mmf3
-
 
 def get_mmf3_catalogue(snrthr=6.,cosmo_flag=True,zknown=True):
     ints_sample = fits.open(gset.mmfset.union_cat_file)
@@ -178,7 +169,6 @@ def get_mmf3_catalogue(snrthr=6.,cosmo_flag=True,zknown=True):
 
     return mmf3
 
-
 def eval_M500_T500_theta500(clcat):
 	Y500=np.zeros(np.size(clcat["Y5R500"]),float)
 	M500=np.zeros(np.size(clcat["Y5R500"]),float)
@@ -195,3 +185,10 @@ def eval_M500_T500_theta500(clcat):
 	clcat["theta500"]=theta500
 	return clcat
 
+# This is obsolete as the point source mask map provided
+# on the legacy archive also mask some of the clusters.
+def return_ps_mask(return_gal_mask=False,idx=0):
+	mask=np.ones(h.nside2npix(gset.mmfset.nside),float)
+	for i in range(6):
+		mask=mask*h.read_map(gset.mmfset.ps_mask_name,i,verbose=False)
+	return mask

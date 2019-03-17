@@ -38,8 +38,6 @@ def get_reduced_pico_sims():
 		h.write_map(gset.mmfset.map_fnames["frg"][ch],tempmap-cmbmap,overwrite=True)
 		h.write_map(gset.mmfset.map_fnames["cmb"][ch],cmbmap,overwrite=True)
 
-
-
 def get_random_plane_centers(numplanes=100,minlat=20.,nsideout=8,seed=0):
 	glon,glat=h.pix2ang(nsideout,np.arange(h.nside2npix(nsideout)),lonlat=True)
 	bandmask=np.zeros(np.size(glat),float)
