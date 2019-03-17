@@ -3,6 +3,8 @@
 # Date created:  15 January September 2019     				 		                             #
 # Date modified: 16 March 2019								 								     #
 ##################################################################################################
+import socket
+hostname = socket.gethostname()
 
 all_channels=[30.,44.,70.,100.,143.,217.,353.,545.,857.]
 
@@ -17,9 +19,12 @@ fwhm[353.]=4.86 ; fwhm[545.]=4.84 ; fwhm[857.]=4.63
 #fwhm[100.]=9.66 ; fwhm[143.]=7.22 ; fwhm[217.]=4.90
 #fwhm[353.]=4.92 ; fwhm[545.]=4.67 ; fwhm[857.]=4.22
 
+if hostname=="sirius.jb.man.ac.uk":
+	datain_dir="/mirror/arotti/Planck/"
+elif hostname=="Adityas-MBP":
+	datain_dir="/Users/adityarotti/Documents/Work/Data/Planck/"
+
 paths={}
-datain_dir="/Users/adityarotti/Documents/Work/Data/Planck/"
-#datain_dir="/mirror/arotti/Planck/"
 paths["planck_maps"]=datain_dir + "/maps/"
 paths["planck_masks"]=datain_dir + "/masks/"
 paths["planck_bp"]=datain_dir + "/channel_band_passes/"

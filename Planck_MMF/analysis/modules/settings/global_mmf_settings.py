@@ -7,6 +7,8 @@
 import os
 import healpy as h
 import numpy as np
+import socket
+hostname = socket.gethostname()
 
 mmfset=None
 
@@ -60,13 +62,18 @@ class setup_mmf_analysis(object):
 		self.mask_tangent_planes=True
 		self.paths["sz_spec"]=os.path.abspath("../modules/simulate/spectral_template/sz_spectra/")
 		
+		if hostname=="sirius.jb.man.ac.uk":
+			globaloutpath="/nvme/arotti/mmf_dataout/"
+		elif hostname=="Adityas-MBP":
+			globaloutpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/"
+		
 		# Setting tempdataout paths
-		self.tempdatapath=self.tempdatapath + str(int(xsize)) + "deg_patches/"
+		self.tempdatapath=globaloutpath + self.tempdatapath + str(int(xsize)) + "deg_patches/"
 		self.paths["templates"]=self.tempdatapath + "/template_bank/"
 		self.paths["tplanes"]=self.tempdatapath + "/tangent_planes/"
 
 		# Setting result paths
-		self.result_path=self.outpath + str(int(xsize)) + "deg_patches/"
+		self.result_path=globaloutpath + self.outpath + str(int(xsize)) + "deg_patches/"
 		self.paths["result_data"]=self.result_path + "/data/"
 		self.paths["result_figs"]=self.result_path + "/figs/"
 
