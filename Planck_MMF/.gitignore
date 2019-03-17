@@ -8,3 +8,4 @@
 !/data/datain
 /analysis/.ipynb_checkpoints/
 /results/**/*.fits
+/xcode/
