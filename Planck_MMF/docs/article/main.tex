@@ -1,0 +1,86 @@
+%\documentclass[prl,twocolumn,nofootinbib,showpacs]{revtex4}
+\documentclass[prl,twocolumn,nofootinbib]{revtex4}
+\usepackage{graphicx,natbib,amssymb,amsmath}
+\usepackage{txfonts}
+\usepackage{color}
+
+\newcommand{\changeJ}[1]{{\textcolor{blue}{#1 [{\sc will need work}]}}}
+\newcommand{\changeJI}[1]{{\textcolor{blue}{#1}}}
+\newcommand{\todo}[1]{{\textcolor{red}{[\sc #1]}}}
+\newcommand{\Teb}{{\bar{T}_{\rm e}}}
+%\newcommand{\Teb}{{T^\star_{\rm e}}}
+\newcommand{\Teby}{{\bar{T}^y_{\rm e}}}
+\newcommand{\Tebell}{{\bar{T}^{yy}_{\rm e, \ell}}}
+\newcommand{\revisit}{\textcolor{red}}
+\newcommand{\keV}{{\rm keV}}
+\newcommand{\GHz}{{\rm GHz}}
+\newcommand{\Te}{T_{\rm e}}
+\newcommand{\pot}[2]{#1 \times 10^{#2}}
+\newcommand{\beal}{\begin{align}}
+\newcommand{\bsub}{\begin{subequations}}
+\newcommand{\esub}{\end{subequations}}
+
+\synctex=1
+\def\aap{A\&A}
+\def\apj{ApJ}
+\def\apjs{ApJS}
+\def\apjl{ApJL}
+\def\mnras{MNRAS}
+\def\aj{AJ}
+\def\nat{Nature}
+\def\aaps{A\&A Supp.}
+\def\pra{Phys.Rev.A}         % Physical Review A: General Physics
+\def\prb{Phys.Rev.B}         % Physical Review B: Solid State
+\def\prc{Phys.Rev.C}         % Physical Review C
+\def\prd{Phys.Rev.D}         % Physical Review D
+\def\prl{Phys.Rev.Lett}      % Physical Review Letters
+\def\araa{ARA\&A}       % Annual Review of Astron and Astrophys
+\def\gca{GeCoA}         % Geochimica et Cosmochimica Acta
+\def\pasp{PASP}              % Publications of the ASP
+\def\pasj{PASJ}              % Publications of the ASJ
+%\def\apss{Astrophysics and Space Science}
+\def\apss{ApSS}
+\def\jcap{JCAP}
+\def\plb{Phys. Lett. B.}
+\def\jhep{JHEP}
+
+\begin{document}
+
+\title[Relativistic temperature corrections in tSZ analyses]
+{A careful reanalysis of cluster number count on Planck}
+
+\author{Aditya Rotti et. al.}
+\email[E-mail: ]{aditya.rotti@manchester.ac.uk}
+
+%\author{Mathieu Remazeilles, Boris Bolliet, Aditya Rotti and Jens Chluba}
+%\author{Mathieu Remazeilles}
+%\email[E-mail: ]{mathieu.remazeilles@manchester.ac.uk}
+%
+%\author{Jens Chluba}
+%\email[E-mail: ]{jens.chluba@manchester.ac.uk}
+%
+%\author{Richard Battye}
+%\email[E-mail: ]{richard.battye@manchester.ac.uk}
+
+\affiliation{Jodrell Bank Centre for Astrophysics, School of Physics and Astronomy,
+The University of Manchester, Manchester, M13 9PL, U.K.}
+
+
+\date{\today}
+
+%---------------------------------------
+\begin{abstract}
+
+\end{abstract}
+%---------------------------------------
+
+\pacs{98.80.-k}
+
+\maketitle
+
+\include{sections/introduction}
+\include{sections/mmf_analysis}
+\include{sections/scaling_laws_planck}
+
+\bibliography{bib}
+\end{document}
