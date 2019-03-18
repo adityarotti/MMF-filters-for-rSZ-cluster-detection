@@ -258,7 +258,7 @@ def write_catalogue(data,filename=[]):
 
 def read_catalogue(filename):
 	filename=gset.mmfset.paths["result_data"] + filename
-	cat=fits.open(gset.mmfset.cosmo_cat_2013_ysz_file)
+	cat=fits.open(filename)
 	keys=cat[1].header.keys()
 	fkeys=[k for k in keys if "TTYPE" in k]
 	fields=[cat[1].header[tkeys] for tkeys in fkeys]
@@ -277,5 +277,5 @@ def return_log_err(gauss_mean,gauss_err,num_samples=100000,ignore_negatives=True
             while np.any(x<0):
                 neg_idx=np.where(x<0)[0]
                 x[neg_idx]=np.random.normal(mu,gauss_err[idx],np.size(neg_idx))
-        logerr[idx]=np.std(log10(x))
+        logerr[idx]=np.std(np.log10(x))
     return logerr
