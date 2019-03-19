@@ -156,6 +156,8 @@ def get_cosmo_catalogue_xray():
 	xsz_cat["GLON"]=c.galactic.l.degree
 	xsz_cat["GLAT"]=c.galactic.b.degree
 
+	ysz_cat=get_cosmo_catalogue_ysz()
+	xsz_cat["z"]=ysz_cat["REDSHIFT"]
 	# Get the angular size for clusters
 	xsz_cat["theta500"]=(xsz_cat["R500"]/(cosmo_fn.dA(xsz_cat["z"])*1000.))*180.*60./np.pi
 
