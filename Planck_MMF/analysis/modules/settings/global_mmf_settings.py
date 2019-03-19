@@ -64,7 +64,8 @@ class setup_mmf_analysis(object):
 		
 		if hostname=="sirius.jb.man.ac.uk":
 			globaloutpath="/nvme/arotti/mmf_dataout/"
-		elif hostname=="Adityas-MBP":
+		#elif hostname=="Adityas-MBP":
+		elif hostname=="rottimac.jb.man.ac.uk":
 			globaloutpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/"
 		
 		# Setting tempdataout paths

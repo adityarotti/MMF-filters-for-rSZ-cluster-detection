@@ -21,7 +21,8 @@ fwhm[353.]=4.86 ; fwhm[545.]=4.84 ; fwhm[857.]=4.63
 
 if hostname=="sirius.jb.man.ac.uk":
 	datain_dir="/mirror/arotti/Planck/"
-elif hostname=="Adityas-MBP":
+#elif hostname=="Adityas-MBP":
+elif hostname=="rottimac.jb.man.ac.uk":
 	datain_dir="/Users/adityarotti/Documents/Work/Data/Planck/"
 
 paths={}
