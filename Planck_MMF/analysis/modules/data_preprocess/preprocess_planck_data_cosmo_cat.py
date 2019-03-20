@@ -202,16 +202,18 @@ def return_tangent_planes(glon,glat,gen_mask=True):
 def gen_ps_inpainted_data(idx):
 	xsz_cat=get_tangent_plane_fnames()
 	filename=xsz_cat["FILENAME"][idx]
-	data=fits.getdata(filename,ext=2)
-	mask=fits.getdata(filename,ext=3)
-	data=data*mask
-	fdata=np.zeros_like(data)
-
-	for i in range(data.shape[0]):
-		fdata[i,]=paint.return_ps_filled_data(data[i,],mask,pixel_size=gset.mmfset.reso,diffthr=1e-3,itermax=20)
-
-	hdu = fits.ImageHDU()
-	hdu.header["EXTNAME"]="PS inpainted Data tangent plane"
-	hdu.data=fdata
-	fits.append(filename,hdu.data,hdu.header)
+	f=fits.open(filename)
+	
+	if len(f)==5:
+		hdu = fits.ImageHDU()
+		hdu.header["EXTNAME"]="PS inpainted data tangent plane"
+		hdu.data=np.zeros_like(f[2].data)
+		for i in range(f[2].data.shape[0]):
+			hdu.data[i,]=paint.return_ps_filled_data(f[2].data[i,],f[3].data,pixel_size=gset.mmfset.reso,diffthr=1e-4,itermax=20)
+		fits.append(filename,hdu.data,hdu.header)
+	elif len(f)==6:
+		for i in range(f[2].data.shape[0]):
+			f[5].data[i,]=paint.return_ps_filled_data(f[2].data[i,],f[3].data,pixel_size=gset.mmfset.reso,diffthr=1e-4,itermax=20)
+		fits.update(filename,f[5].data,f[5].header,"PS inpainted data tangent plane")
+	f.close()
 

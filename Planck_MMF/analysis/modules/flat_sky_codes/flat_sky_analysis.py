@@ -248,7 +248,6 @@ def get_azi_avg(map,pixel_size,smwin=1):
 
 	return ravg,mapavg
 
-
 def get_gauss_beam(fwhm,lmax):
 	'''
 	fwhm : The FWHM of the Gaussian beam in arcminutes.

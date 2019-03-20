@@ -28,10 +28,8 @@ class tangent_plane_setup(object):
 		self.npix=np.int(self.ang_size*60./self.pixel_size)
 		self.projop=h.projector.GnomonicProj(xsize=self.npix,ysize=self.npix,coord=coord,reso=self.pixel_size,rot=[self.glon,self.glat])
 
-
 	def vec2pix(self,x,y,z):
 		return h.vec2pix(self.nside,x,y,z)
-
 
 	def get_tangent_plane(self,map):
 		'''
@@ -40,7 +38,6 @@ class tangent_plane_setup(object):
 		'''
 		image=self.projop.projmap(map,self.vec2pix)
 		return image
-
 
 	def ij2ang(self,i,j):
 		'''
@@ -51,7 +48,6 @@ class tangent_plane_setup(object):
 		
 		return glon,glat
 
-
 	def ang2ij(self,glon,glat):
 		'''
 		This function returns the pixel numbers along x and y axis given the coordinates in galactic coordinates (degrees.)
@@ -59,7 +55,6 @@ class tangent_plane_setup(object):
 		x,y=self.projop.ang2xy(theta=glon,phi=glat,lonlat=True)
 		ix,iy=self.projop.xy2ij(x=x,y=y)
 		return ix,iy
-
 
 	def distance(self,ic,jc,i,j):
 		'''

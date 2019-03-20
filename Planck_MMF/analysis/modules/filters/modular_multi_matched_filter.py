@@ -45,7 +45,6 @@ class multi_matched_filter(object):
 				
 		self.cross_Pk_inv=np.linalg.inv(self.cross_Pk)
 
-
 	def evaluate_mmf(self,template_alm,sz_spec,optimize=False):
 		template_ft=np.zeros((self.totnpix,self.numch),np.complex)
 		for i,ch in enumerate(gset.mmfset.channels):
@@ -217,7 +216,6 @@ class multi_matched_filter(object):
 			hdu.writeto(filename,overwrite=True)
 		
 		return theta500,T500,ans
-
 
 	def eval_mmf_theta500_T500_constrained(self,redshift,maskthr=3.,mask_fdata=True,write_data=False,filename=[]):
 		theta500=np.array(sorted(self.sp_ft_bank.keys()))

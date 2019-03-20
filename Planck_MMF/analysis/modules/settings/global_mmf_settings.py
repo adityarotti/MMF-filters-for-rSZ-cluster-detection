@@ -3,7 +3,6 @@
 # Date created:  15 January September 2019     				 		                             #
 # Date modified: 16 March 2019								 								     #
 ##################################################################################################
-
 import os
 import healpy as h
 import numpy as np
@@ -12,15 +11,14 @@ hostname = socket.gethostname()
 
 mmfset=None
 
-def setup_mmf_config(outpath,tempdatapath,dataset="planck_pr3",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],do_band_pass=True,gen_paths=True):
+def setup_mmf_config(outpath,tempdatapath,dataset="planck_pr3",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],do_band_pass=True,gen_paths=True,use_psf_data=True):
 	global mmfset
-	mmfset=setup_mmf_analysis(dataset=dataset,nside=nside,xsize=xsize,pwc=pwc,channels=channels,chmin=chmin,do_band_pass=do_band_pass,outpath=outpath,tempdatapath=tempdatapath)
+	mmfset=setup_mmf_analysis(dataset=dataset,nside=nside,xsize=xsize,pwc=pwc,channels=channels,chmin=chmin,do_band_pass=do_band_pass,outpath=outpath,tempdatapath=tempdatapath,use_psf_data=use_psf_data)
 	if gen_paths:
 		mmfset.init_paths()
 
 class setup_mmf_analysis(object):
-	def __init__(self,dataset="planck_pr3",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],do_band_pass=True,outpath="",tempdatapath=""):
-		
+	def __init__(self,dataset="planck_pr3",nside=2048,xsize=10.,pwc=True,channels=[],chmin=[],do_band_pass=True,outpath="",tempdatapath="",use_psf_data=True):
 		if dataset=="planck_pr3":
 			from experiments import planck_pr3 as planck
 			self.__dict__=planck.__dict__.copy()
@@ -46,7 +44,8 @@ class setup_mmf_analysis(object):
 		self.nside=nside
 		if dataset=="pico":
 			self.nside=4096
-			
+		
+		self.use_psf_data=use_psf_data
 		self.xsize=xsize
 		self.pwc=pwc
 		self.outpath=outpath
@@ -61,13 +60,11 @@ class setup_mmf_analysis(object):
 		self.mask_planck_maps=True
 		self.mask_tangent_planes=True
 		self.paths["sz_spec"]=os.path.abspath("../modules/simulate/spectral_template/sz_spectra/")
-		
+
+		globaloutpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/"
 		if hostname=="sirius.jb.man.ac.uk":
 			globaloutpath="/nvme/arotti/mmf_dataout/"
-		#elif hostname=="Adityas-MBP":
-		elif hostname=="rottimac.jb.man.ac.uk":
-			globaloutpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/"
-		
+
 		# Setting tempdataout paths
 		self.tempdatapath=globaloutpath + self.tempdatapath + str(int(xsize)) + "deg_patches/"
 		self.paths["templates"]=self.tempdatapath + "/template_bank/"
@@ -95,4 +92,3 @@ class setup_mmf_analysis(object):
 		directory = os.path.dirname(file_path)
 		if not os.path.exists(directory):
 			os.makedirs(directory)
-

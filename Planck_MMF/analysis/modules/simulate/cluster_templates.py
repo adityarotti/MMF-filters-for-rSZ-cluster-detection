@@ -99,7 +99,6 @@ class cluster_spectro_spatial_templates(object):
 			noise_norm[idx]=np.sum(template)*gset.mmfset.reso*gset.mmfset.reso
 		self.fn_yerr_norm=interp1d(self.theta500,noise_norm,bounds_error=False,fill_value=0.)
 
-
 	def setup_channel_beam_filters(self):
 		lmax=4*gset.mmfset.nside
 		

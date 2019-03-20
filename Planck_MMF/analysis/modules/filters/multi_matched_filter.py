@@ -16,17 +16,17 @@ def run_multi_matched_filter(data,R500,channels,pixel_size,fwhm={},T=0.,smwin=5,
 	nxpix=data.shape[1] ; nypix=data.shape[2] ; totnpix=nxpix*nypix
 	d2x=((pixel_size/60.)*np.pi/180.)**2. ; d2k= 1./(nxpix*nypix*d2x)
 	numch=np.size(channels)
-	
+
 	# Getting the Planck band passed SZ spectrum
 	plbp_sz_spec=szsed.return_planck_bp_sz_spec(T,datapath=datapath)
-	
+
 	template=sc.gen_cluster_template(nxpix,R500,pixel_size,cutoff=cutoff,profile=profile)
-	
+
 	data_ft=np.zeros((numch,nxpix,nxpix),complex)
 	cross_Pk=np.zeros((totnpix,numch,numch),np.float64)
 	template_ft=np.zeros((totnpix,numch),np.complex)
 	cluster_ft=fsa.map2alm(np.fft.fftshift(template),pixel_size)
-	
+
 	if fwhm!={}:
 		if pwc_nside!=[]:
 			pwc=h.pixwin(pwc_nside,pol=False)
@@ -73,6 +73,3 @@ def run_multi_matched_filter(data,R500,channels,pixel_size,fwhm={},T=0.,smwin=5,
 		return result,rec_err,cross_Pk
 	else:
 		return result,rec_err
-
-
-
