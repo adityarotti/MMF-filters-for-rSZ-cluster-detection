@@ -79,8 +79,8 @@ class cluster_spectro_spatial_templates(object):
 			else:
 				return template
 		else:
-			print filename, " does not exist."
-			print "generating the template to return"
+			#print filename, " does not exist."
+			#print "generating the template to return"
 			
 			template=sc.gen_cluster_template(gset.mmfset.npix,thetac,pixel_size=gset.mmfset.reso,y0=1.,cutoff=10.,dorandom=False,profile="GNFW")
 			hdu = fits.ImageHDU()
