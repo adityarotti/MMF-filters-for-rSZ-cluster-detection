@@ -145,7 +145,6 @@ def get_tangent_plane_fnames():
 	xsz_cat["FILENAME"]=tfname
     return xsz_cat
 
-
 def get_cosmo_catalogue_xray():
 	dtype=[ "RA", "DEC","z","R500","Mg500","Mg500_err_m","Mg500_err_p","TX","TX_err_m","TX_err_p","M500_YX","M500_err_m","M500_err_p"]
 
