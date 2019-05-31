@@ -14,6 +14,8 @@ from flat_sky_codes import tangent_plane_analysis as tpa
 from modules.settings import global_mmf_settings as gset
 from settings import constants as cnst
 from cosmology import cosmo_fn
+from astropy.io import fits
+import data_inpaint_ps as paint
 
 def extract_tangent_planes(gen_mask=True,verbose=False,do_data=True,do_mask=True):
 	
@@ -180,3 +182,21 @@ def return_ps_mask(return_gal_mask=False,idx=0):
 	for i in range(6):
 		mask=mask*h.read_map(gset.mmfset.ps_mask_name,i,verbose=False)
 	return mask
+
+def gen_ps_inpainted_data(idx):
+	xsz_cat=get_tangent_plane_fnames()
+	filename=xsz_cat["FILENAME"][idx]
+	f=fits.open(filename)
+	
+	if len(f)==5:
+		hdu = fits.ImageHDU()
+		hdu.header["EXTNAME"]="PS inpainted data tangent plane"
+		hdu.data=np.zeros_like(f[2].data)
+		for i in range(f[2].data.shape[0]):
+			hdu.data[i,]=paint.return_ps_filled_data(f[2].data[i,],f[3].data,pixel_size=gset.mmfset.reso,diffthr=1e-3,itermax=20)
+		fits.append(filename,hdu.data,hdu.header)
+	elif len(f)==6:
+		for i in range(f[2].data.shape[0]):
+			f[5].data[i,]=paint.return_ps_filled_data(f[2].data[i,],f[3].data,pixel_size=gset.mmfset.reso,diffthr=1e-3,itermax=20)
+		fits.update(filename,f[5].data,f[5].header,"PS inpainted data tangent plane")
+	f.close()

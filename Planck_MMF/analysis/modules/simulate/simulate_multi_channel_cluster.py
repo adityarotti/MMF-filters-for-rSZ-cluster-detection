@@ -12,6 +12,7 @@ from flat_sky_codes  import flat_sky_analysis as fsa
 
 
 def return_mc_cluster(M500,z,op,y0=1e-4):
+	'''Returns multi-frequency simulation of a cluster'''
 	Tc=clcosmo.convert_M500_T500(M500,z)
 	thetac=clcosmo.convert_M500_theta500(M500,z)
 	template=sc.gen_cluster_template(gset.mmfset.npix,thetac,gset.mmfset.reso,y0=y0)

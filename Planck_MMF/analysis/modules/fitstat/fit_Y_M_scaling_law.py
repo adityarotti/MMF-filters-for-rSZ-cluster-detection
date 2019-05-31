@@ -4,9 +4,8 @@ from scipy.special import erfc
 import bces.bces as bces
 import numpy as np
 from contextlib import contextmanager
-import sys, os
 
-def return_Y_M_fit(YSZ_500,YSZ_500_err,M500,M500_err,redshift,qcut=6.,mbias=[],use_approx_err=False,fidx=0,verbose=False):
+def return_Y_M_fit(YSZ_500,YSZ_500_err,M500,M500_err,redshift,qcut=6.,mbias=[],use_approx_err=False,fidx=3,verbose=False):
 	np.random.seed(0)
 
 	Ezgamma=(cosmo_fn.Ez(redshift)**(-2./3.))/1e-4
@@ -39,8 +38,15 @@ def return_Y_M_fit(YSZ_500,YSZ_500_err,M500,M500_err,redshift,qcut=6.,mbias=[],u
 			w=(N/dvar)/np.sum(1./dvar)
 			dmm=ydata - alpha[fidx]*xdata - A[fidx]
 			var_raw=np.sum(w*(dmm**2.))/(N-2.)
-			var_stat=np.sum(yerr**2.)/N
+			var_raw_var=(1./np.sum(1./dvar))*(N/(N-2.))
+			#var_stat=np.sum(w*(yerr**2.))/(N-2.)
+			#var_stat_var=np.sum(w*(yerr**2.-var_stat)**2.)/(N-2.)
+			var_stat=np.mean(yerr**2.)
+			var_stat_var=np.std(yerr**2.)**2.
 			var_int=var_raw-var_stat
+			var_int_var=var_raw_var+var_stat_var
+			# See A.3.3 in Planck 2013 Cosmology with CNC
+			var_int_corr=var_int + 2.*(np.cos(np.arctan(alpha[3]))*0.05)**2.
 			var=np.float64(yerr**2. + var_int)
 
 			q=YSZ_500/YSZ_500_err
@@ -64,8 +70,13 @@ def return_Y_M_fit(YSZ_500,YSZ_500_err,M500,M500_err,redshift,qcut=6.,mbias=[],u
 		w=(N/dvar)/np.sum(1./dvar)
 		dmm=ydata - alpha[fidx]*xdata - A[fidx]
 		var_raw=np.sum(w*(dmm**2.))/(N-2.)
+		var_raw_var=(1./np.sum(1./dvar))*(N/(N-2.))
 		var_stat=np.sum(yerr**2.)/N
+		var_stat_var=var_stat/N
 		var_int=var_raw-var_stat
+		var_int_var=var_raw_var+var_stat_var
+		# See A.3.3 in Planck 2013 Cosmology with CNC
+		var_int_corr=var_int + 2.*(np.cos(np.arctan(alpha[3]))**2.)*(0.05**2.)
 		if verbose:
 			print alpha[3],alpha_err[3],A[3],A_err[3],np.sqrt(var_raw),np.sqrt(var_int)
 
@@ -74,9 +85,15 @@ def return_Y_M_fit(YSZ_500,YSZ_500_err,M500,M500_err,redshift,qcut=6.,mbias=[],u
 	result["alpha_err"]=alpha_err[3]
 	result["A"]=A[3]
 	result["A_err"]=A_err[3]
+	result["covAalpha"]=cov_alphaA[3]
 	result["sigma_raw"]=np.sqrt(var_raw)
+	result["sigma_raw_err"]=np.sqrt(var_raw_var)
 	result["sigma_int"]=np.sqrt(var_int)
+	result["sigma_int_err"]=np.sqrt(var_int_var)
+	result["sigma_int_corr"]=np.sqrt(var_int_corr)
+	result["sigma_int_corr_err"]=np.sqrt(var_int_var)
 	result["sigma_stat"]=np.sqrt(var_stat)
+	result["sigma_stat_err"]=np.sqrt(var_stat_var)
 	result["BIAS"]=mbias
 	return result
 

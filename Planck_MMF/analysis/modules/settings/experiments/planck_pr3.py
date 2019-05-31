@@ -8,16 +8,22 @@ hostname = socket.gethostname()
 
 all_channels=[30.,44.,70.,100.,143.,217.,353.,545.,857.]
 
-# From Planck SZ paper
-fwhm={} # Arcminutes
-fwhm[30.]=33.10 ; fwhm[44.]=27.94 ; fwhm[70.]=13.07
-fwhm[100.]=9.66 ; fwhm[143.]=7.27 ; fwhm[217.]=5.01
-fwhm[353.]=4.86 ; fwhm[545.]=4.84 ; fwhm[857.]=4.63
-
 #fwhm={} # Arcminutes
 #fwhm[30.]=32.29 ; fwhm[44.]=27.94 ; fwhm[70.]=13.08
 #fwhm[100.]=9.66 ; fwhm[143.]=7.22 ; fwhm[217.]=4.90
 #fwhm[353.]=4.92 ; fwhm[545.]=4.67 ; fwhm[857.]=4.22
+
+## From Planck 2015 XXII :  A map of the thermal Sunyaev-Zeldovich effect
+#fwhm={} # Arcminutes
+#fwhm[30.]=33.10 ; fwhm[44.]=27.94 ; fwhm[70.]=13.07
+#fwhm[100.]=9.66 ; fwhm[143.]=7.27 ; fwhm[217.]=5.01
+#fwhm[353.]=4.86 ; fwhm[545.]=4.84 ; fwhm[857.]=4.63
+
+# From Planck 2015 XXVII The Second Planck Catalogue of Sunyaev-Zeldovich Sources
+fwhm={} # Arcminutes
+fwhm[30.]=33.10 ; fwhm[44.]=27.94 ; fwhm[70.]=13.07
+fwhm[100.]=9.659 ; fwhm[143.]=7.220 ; fwhm[217.]=4.900
+fwhm[353.]=4.916 ; fwhm[545.]=4.675 ; fwhm[857.]=4.216
 
 datain_dir="/Users/adityarotti/Documents/Work/Data/Planck/"
 if hostname=="sirius.jb.man.ac.uk":

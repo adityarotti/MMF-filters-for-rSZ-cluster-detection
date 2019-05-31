@@ -8,6 +8,7 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.integrate import dblquad
 import upp_param_arnaud2011 as upp
+#import upp_param_planck2013 as upp
 
 # The zero of the radial profile is set at frac*R500
 
