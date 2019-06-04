@@ -72,8 +72,14 @@ def extract_tangent_planes(gen_mask=True,verbose=False,do_data=True,do_mask=True
 			glat=xsz_cat["GLAT"][idx]
 			projop=tpa.tangent_plane_setup(gset.mmfset.nside,gset.mmfset.xsize,glat,glon,rescale=1.)
 			timage=projop.get_tangent_plane(chmap)
-			hdu_mask.data=timage
-			fits.append(filename,hdu_mask.data,hdu_mask.header)
+			f=fits.open(filename)
+			if len(f)>3:
+				f[3].data=timage
+				fits.update(filename,f[3].data,f[3].header,"Point Source Mask")
+			else:
+				hdu_mask.data=timage
+				fits.append(filename,hdu_mask.data,hdu_mask.header)
+			f.close()
 		
 		# Extended point source mask
 		if verbose:
@@ -86,8 +92,15 @@ def extract_tangent_planes(gen_mask=True,verbose=False,do_data=True,do_mask=True
 			glat=xsz_cat["GLAT"][idx]
 			projop=tpa.tangent_plane_setup(gset.mmfset.nside,gset.mmfset.xsize,glat,glon,rescale=1.)
 			timage=projop.get_tangent_plane(chmap)
-			hdu_mask.data=timage
-			fits.append(filename,hdu_mask.data,hdu_mask.header)
+			
+			f=fits.open(filename)
+			if len(f)>4:
+				f[4].data=timage
+				fits.update(filename,f[4].data,f[4].header,"Extended point Source Mask")
+			else:
+				hdu_mask.data=timage
+				fits.append(filename,hdu_mask.data,hdu_mask.header)
+			f.close()
 
 def gen_ps_mask(snrthr=10.,ps_cutoff=3.,verbose=False,gen_mask=True):
 	filename=gset.mmfset.paths["planck_masks"] + "mmf3_ps_snr" + str(int(ps_cutoff)) + "_mask.fits"

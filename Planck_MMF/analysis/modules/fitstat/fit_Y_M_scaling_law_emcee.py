@@ -5,7 +5,7 @@ from cosmology import cosmo_fn
 from scipy.special import erfc
 from matplotlib import pyplot as plt
 
-def return_Y_M_fit(YSZ_500,YSZ_500_err,M500,M500_err,redshift,mbias=[],qcut=6.,min_type="SLS",nwalkers=50,nsamples=2000,burnin=500,use_approx_err=False,ana_corr=False,verbose=False):
+def return_Y_M_fit(YSZ_500,YSZ_500_err,M500,M500_err,redshift,mbias=[],qcut=6.,min_type="ORTH",nwalkers=50,nsamples=2000,burnin=500,use_approx_err=False,ana_corr=False,verbose=False,A_prior=[-6.,6],alpha_prior=[-3,3.],int_scat_prior=[-2.,2.]):
 	np.random.seed(0)
 	
 	solve_mbias=False
@@ -35,17 +35,17 @@ def return_Y_M_fit(YSZ_500,YSZ_500_err,M500,M500_err,redshift,mbias=[],qcut=6.,m
 			#print np.sum(abs(mbias-ombias)/ombias/np.size(mbias))
 			mbias=np.copy(ombias)
 			ydata=np.log10(YSZ_500*Ezgamma/mbias)
-			result=return_emcee_fit(xdata,ydata,xerr,yerr,min_type=min_type,nwalkers=nwalkers,nsamples=nsamples,burnin=burnin)
+			result=return_emcee_fit(xdata,ydata,xerr,yerr,A_prior,alpha_prior,int_scat_prior,min_type=min_type,nwalkers=nwalkers,nsamples=nsamples,burnin=burnin)
 			ombias=return_malmquist_bias(YSZ_500/YSZ_500_err,yerr,result["param"][2],qcut=qcut)
 			iteration=iteration+1
 		result["BIAS"]=ombias
 	else:
 		ydata=np.log10(YSZ_500*Ezgamma/mbias)
-		result=return_emcee_fit(xdata,ydata,xerr,yerr,min_type=min_type,nwalkers=nwalkers,nsamples=nsamples,burnin=burnin)
+		result=return_emcee_fit(xdata,ydata,xerr,yerr,A_prior,alpha_prior,int_scat_prior,min_type=min_type,nwalkers=nwalkers,nsamples=nsamples,burnin=burnin)
 		result["BIAS"]=mbias
 	return result
 
-def return_emcee_fit(xdata,ydata,xerr,yerr,min_type="SLS",nwalkers=50,nsamples=2000,burnin=500):
+def return_emcee_fit(xdata,ydata,xerr,yerr,A_prior,alpha_prior,int_scat_prior,min_type="SLS",nwalkers=50,nsamples=2000,burnin=500):
 	'''
 	This is currently setup to carry out a linear fit and solve for the intrinsic scatter in log_10(Y).
 	min_type: minimization type. SLS -- > Simple least squares. ; ORTH --> Minimizes orthogonal distance.
@@ -68,7 +68,7 @@ def return_emcee_fit(xdata,ydata,xerr,yerr,min_type="SLS",nwalkers=50,nsamples=2
 
 	def lnprior(param):
 		alpha, A, log10_log_yint = param
-		if 0. < alpha < 4. and -2.0 < A < 2.0 and -2. < log10_log_yint < 0.:
+		if alpha_prior[0] < alpha < alpha_prior[1] and A_prior[0] < A < A_prior[1] and int_scat_prior[0] < log10_log_yint < int_scat_prior[1]:
 			return 0.0
 		return -np.inf
 
@@ -79,7 +79,7 @@ def return_emcee_fit(xdata,ydata,xerr,yerr,min_type="SLS",nwalkers=50,nsamples=2
 		return lp + lnlike(param, x, y, xerr, yerr)
 
 	ndim=3
-	pos = [[0.5,0.2,0.1]*np.random.randn(ndim) for i in range(nwalkers)]
+	pos = [[2., -3.,0.] + [0.1,0.5,0.01]*np.random.randn(ndim) for i in range(nwalkers)]
 	sampler = emcee.EnsembleSampler(nwalkers, ndim, lnprob, args=(xdata, ydata,xerr, yerr))
 	temp=sampler.run_mcmc(pos, nsamples)
 	samples = sampler.chain[:, burnin:, :].reshape((-1, ndim)) ; samples[:, 2] = 10.**(samples[:, 2])
@@ -116,7 +116,7 @@ def return_malmquist_bias(qYSZ,log_yerr,log_yint,qcut=6):
 	mbias=10.**(numerator/denominator)
 	return mbias
 
-def gen_corner_plot(samples,labels=[r"$\alpha$", "$A$", r"$\sigma_{{\rm Log}Y|M}$"],figttl="",figname="",numdec=3):
+def gen_corner_plot(samples,labels=[r"$\alpha$", "$A$", r"$\sigma_{{\rm Log}Y|M}$"],figttl="",figname="",numdec=3,eqnlbl=r"${\rm Log}_{10}\left( E_z^{-2/3} Y^{SZ}_{500} \right) = A + \alpha {\rm Log}_{10}\left(\frac{M_x}{6}\right)$"):
 	temp,ndim=np.shape(samples)
 	param=np.zeros(ndim,float) ; param_err=np.zeros(ndim,float)
 	corr_mat=np.zeros((ndim,ndim),float)
@@ -136,7 +136,7 @@ def gen_corner_plot(samples,labels=[r"$\alpha$", "$A$", r"$\sigma_{{\rm Log}Y|M}
 	fig.text(0.71,0.51,r"$ \rm{Corr}(\alpha,A)=$" + str(round(corr_mat[0,1],numdec)))
 	fig.text(0.71,0.48,r"$ \rm{Corr}(\alpha,\sigma_{{\rm Log}Y|M})=$" + str(round(corr_mat[0,2],numdec)))
 	fig.text(0.71,0.45,r"$ \rm{Corr}(A,\sigma_{{\rm Log}Y|M})=$" + str(round(corr_mat[1,2],numdec)))
-	fig.text(0.53,0.86,r"$\rm{log}_{10}\left(E_z^{-2/3} \frac{y^{rSZ}}{10^{-4}}\right) = A + \alpha \rm{log}_{10}\left(\frac{M_x}{6}\right)$",fontsize=12)
+	fig.text(0.53,0.86,eqnlbl,fontsize=12)
 	if figname!="":
 		plt.savefig(figname,bbox_inches="tight")
 
