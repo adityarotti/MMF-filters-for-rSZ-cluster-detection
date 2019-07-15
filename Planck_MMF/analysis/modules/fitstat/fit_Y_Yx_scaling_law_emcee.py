@@ -66,7 +66,7 @@ def return_emcee_fit(xdata,ydata,xerr,yerr,A_prior,alpha_prior,int_scat_prior,mi
 
 	def lnprior(param):
 		alpha, A, log10_log_yint = param
-		if 0. < alpha < 2. and -8.0 < A < 8.0 and -2. < log10_log_yint < 0.:
+		if alpha_prior[0] < alpha < alpha_prior[1] and A_prior[0] < A < A_prior[1] and int_scat_prior[0] < log10_log_yint < int_scat_prior[1]:
 			return 0.0
 		return -np.inf
 
