@@ -28,6 +28,8 @@ fwhm[353.]=4.916 ; fwhm[545.]=4.675 ; fwhm[857.]=4.216
 datain_dir="/Users/adityarotti/Documents/Work/Data/Planck/"
 if hostname=="sirius.jb.man.ac.uk":
 	datain_dir="/mirror/arotti/Planck/"
+if hostname=="sirius3.jb.man.ac.uk":
+	datain_dir="/nvme/arotti/datain/Planck/"
 
 paths={}
 paths["planck_maps"]=datain_dir + "/maps/"
