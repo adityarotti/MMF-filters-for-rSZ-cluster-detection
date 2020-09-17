@@ -62,8 +62,8 @@ class setup_mmf_analysis(object):
 		self.paths["sz_spec"]=os.path.abspath("../modules/simulate/spectral_template/sz_spectra/")
 
 		globaloutpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/"
-		if hostname=="sirius.jb.man.ac.uk" or hostname=="sirius3.jb.man.ac.uk":
-			globaloutpath="/nvme/arotti/mmf_dataout/"
+		if "sirius" in hostname:
+			globaloutpath="/scratch/nas_chluba/specdist/arotti/mmf_dataout/"
 
 		# Setting tempdataout paths
 		self.tempdatapath=globaloutpath + self.tempdatapath + str(int(xsize)) + "deg_patches/"
