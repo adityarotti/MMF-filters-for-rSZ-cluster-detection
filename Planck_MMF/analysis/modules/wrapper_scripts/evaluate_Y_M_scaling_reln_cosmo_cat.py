@@ -25,7 +25,7 @@ class Y_M_scaling(object):
 		#ppd.extract_tangent_planes()
 		self.conv_Y5R500_SPHR500=szp.convert_Ycyl_xR500_Ysph_xR500()
 		self.tmplt=cltemp.cluster_spectro_spatial_templates(T_min=0.,T_max=40.,T_step=0.1,theta500_min=2.,theta500_max=55.,theta_step=1.)
-		self.tmplt.setup_templates()
+		self.tmplt.setup_templates(gen_template=False)
 		self.cmask=gm.return_center_mask()
 		self.emask=gm.return_edge_apodized_mask(15.,20.)
 		self.szspecT0=self.return_sz_spec(Tc=0.)

@@ -25,6 +25,9 @@ tempfn=tempfn.subs(nu,nu*1e9)
 tempfn=tempfn.subs(T,T_cmb)
 fn=sp.lambdify([nu],tempfn,modules="numpy")
 
+tempfn=fn_symb["bb_diffT"].subs({c0:(2.*h/(c**2.)), c1:(h/k), T:T_cmb })
+fn1=sp.lambdify([nu],tempfn,modules="numpy")
+
 def conv_KTBB_KTRJ(nu):
 	return fn(nu)
 

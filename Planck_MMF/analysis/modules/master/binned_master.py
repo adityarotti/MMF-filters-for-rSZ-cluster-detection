@@ -23,9 +23,7 @@ class binned_master(object):
 		self.bmax=bmax
 		if self.bmax!=[]:
 			self.lmax=np.int(max(self.bmax))
-		
-		
-		
+			
 		self.clmask=h.alm2cl(h.map2alm(self.mask,lmax=self.masklmax))
 		self.mllp=ms.master.calc_kernel(self.clmask,self.lmin,self.lmax,self.masklmax)
 

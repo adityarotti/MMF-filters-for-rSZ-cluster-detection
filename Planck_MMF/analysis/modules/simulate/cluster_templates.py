@@ -11,6 +11,7 @@ from astropy.io import fits
 from scipy.interpolate import interp1d
 
 from modules.settings import global_mmf_settings as gset
+#from settings import global_mmf_settings as gset
 #from spectral_template import planck_band_pass_sz as plbpsz
 from spatial_template import sim_cluster as sc
 from flat_sky_codes  import flat_sky_analysis as fsa
@@ -31,7 +32,7 @@ class cluster_spectro_spatial_templates(object):
 
 	def setup_templates(self,gen_template=False):
 		if gen_template:
-			self.gen_template()
+			self.gen_template_bank()
 		self.gen_template_ft_bank()
 		
 		if gset.mmfset.do_band_pass:
@@ -51,7 +52,7 @@ class cluster_spectro_spatial_templates(object):
 			hdu = fits.ImageHDU()
 			hdu.header["Comments"]="Template"
 			hdu.header["R500"]=str(thetac) + " arcminutes"
-			hdu.header["profile"]=profile
+			hdu.header["profile"]=self.profile
 			hdu.data=template
 			filename=gset.mmfset.paths["templates"] + "cluster_" +str(thetac) + ".fits"
 			hdu.writeto(filename,overwrite=True)

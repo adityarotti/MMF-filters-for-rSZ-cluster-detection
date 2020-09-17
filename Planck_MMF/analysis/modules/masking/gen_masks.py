@@ -9,6 +9,7 @@ import numpy as np
 import healpy as h
 from modules.settings import global_mmf_settings as gset
 from flat_sky_codes import flat_sky_analysis as fsa
+from scipy.ndimage.morphology import distance_transform_edt
 
 def return_center_mask(radius=50.):
 	mask=np.zeros((gset.mmfset.npix,gset.mmfset.npix),float)
@@ -50,3 +51,14 @@ def return_gal_mask():
 	mask[smc_pix]=0.
 	
 	return mask
+
+def return_apodized_mask(data,apowidth=30.):
+	dfnz=distance_transform_edt(data)*gset.mmfset.reso
+	temp_gmask=data.ravel()
+	dfnz=dfnz.ravel()
+	for i in range(len(dfnz)):
+		if dfnz[i]<=apowidth:
+			pixval=1.-np.cos((dfnz[i]/apowidth)*(np.pi/2.))**2.
+			temp_gmask[i]=pixval
+	return temp_gmask.reshape(gset.mmfset.npix,gset.mmfset.npix)
+
