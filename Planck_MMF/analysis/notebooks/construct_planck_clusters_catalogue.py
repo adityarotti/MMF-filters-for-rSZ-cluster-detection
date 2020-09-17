@@ -67,22 +67,22 @@ plt.clf()
 plt.close()
 logging.info("================>Completed Sky tiling definitions")
 
-#tpd.extract_data_tiles(tiledef)
-#logging.info("================>Completed extracting sky tiles, point source mask and galactic mask")
-#
-#def gen_ps_inpainted_data(px):
-#    tpd.gen_ps_inpainted_data(px,tiledef)
-#
-#def parallel_psfill(numprocs):
-#    pool=mp.Pool(processes=numprocs)
-#    pool.map(gen_ps_inpainted_data,tiledef.keys())
-#    pool.close()
-#    pool.join()
-#
-#start=time.time()
-#parallel_psfill(4)
-#print time.time()-start
-#logging.info("================>Completed inpaiting the point sources")
+tpd.extract_data_tiles(tiledef)
+logging.info("================>Completed extracting sky tiles, point source mask and galactic mask")
+
+def gen_ps_inpainted_data(px):
+    tpd.gen_ps_inpainted_data(px,tiledef)
+
+def parallel_psfill(numprocs):
+    pool=mp.Pool(processes=numprocs)
+    pool.map(gen_ps_inpainted_data,tiledef.keys())
+    pool.close()
+    pool.join()
+
+start=time.time()
+parallel_psfill(4)
+print time.time()-start
+logging.info("================>Completed inpaiting the point sources")
 
 tmplt=cltemp.cluster_spectro_spatial_templates(T_step=1.,theta500_min=1.,theta500_max=100.,theta_step=2.)
 tmplt.setup_templates()
