@@ -197,7 +197,8 @@ def gen_tile_figs(data,theta500,err,cluscat,filename,showplt=False):
 		radius=(snr)*1.5*gset.mmfset.reso/60.
 		circ = Circle((y,x),radius,edgecolor='red', facecolor="none",alpha=0.85,linewidth=0.9)
 		ax1.add_patch(circ)
-	img1 = ax1.imshow(data/err,vmin=-2,vmax=10.,origin="lower",cmap="cividis",extent=extent)
+#	img1 = ax1.imshow(data/err,vmin=-2,vmax=10.,origin="lower",cmap="cividis",extent=extent)
+	img1 = ax1.imshow(data/err,vmin=-2,vmax=10.,origin="lower",cmap="viridis",extent=extent)
 	colorbar(img1)
 	ax1.set_title("Filtered data SNR [ $\sigma=$"+ str(round(err*1e5,3)) + r" ; $\theta_{500}=$" + str(round(theta500)) + "]",fontsize=8)
 	plt.savefig(filename,bbox_inches="tight",dpi=300)
