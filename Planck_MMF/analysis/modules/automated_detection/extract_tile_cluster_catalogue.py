@@ -198,7 +198,7 @@ def gen_tile_figs(data,theta500,err,cluscat,filename,showplt=False):
 #	img1 = ax1.imshow(data/err,vmin=-2,vmax=10.,origin="lower",cmap="viridis",extent=extent)
 	colorbar(img1)
 	ax1.set_title("Filtered data SNR [ $\sigma=$"+ str(round(err*1e5,3)) + r" ; $\theta_{500}=$" + str(round(theta500)) + "]",fontsize=8)
-	plt.savefig(filename,bbox_inches="tight",dpi=100)
+	plt.savefig(filename,bbox_inches="tight",dpi=150)
 	plt.clf()
 	plt.close()
 
