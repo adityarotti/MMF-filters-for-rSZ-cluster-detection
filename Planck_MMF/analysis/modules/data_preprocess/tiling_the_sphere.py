@@ -59,7 +59,8 @@ def return_tile_definition(tilenside=8,fsky_map=[],fsky_thr=0.):
 		tiledef[px]["GLON"]=pix_glon[px]
 		tiledef[px]["GLAT"]=pix_glat[px]
 		tiledef[px]["TILENAME"]="tile_G" + str(round(pix_glon[px],2)) + ["", "+"][pix_glat[px] >= 0] + str(round(pix_glat[px],2))
-		tiledef[px]["FILENAME"]=gset.mmfset.paths["tplanes"] + "tile_G" + str(round(pix_glon[px],2)) + ["", "+"][pix_glat[px] >= 0] + str(round(pix_glat[px],2)) + ".fits"
+		tiledef[px]["FILENAME"]=gset.mmfset.paths["tplanes"] + tiledef[px]["TILENAME"] + ".fits"
+		tiledef[px]["CATNAME"]=gset.mmfset.paths["result_data"] + tiledef[px]["TILENAME"] + ".dict"
 	return tiledef
 
 def return_sky_tile_map(tilenside=8,dummy_nside=512,rescale=0.5,edge_width=60.,fwhm=60.):

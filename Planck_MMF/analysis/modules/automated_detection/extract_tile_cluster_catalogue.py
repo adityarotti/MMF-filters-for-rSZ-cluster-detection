@@ -60,15 +60,12 @@ def extract_tile_cluster_catalogue(tile_px,tiledef,tmplt,genfig=True,snrthr=4):
 		cmd="convert -delay 50 " + cluspath + "*.jpeg " + cluspath + tilename + "def.gif"
 		os.system(cmd)
 
-	catname=gset.mmfset.paths["result_data"] + tilename + ".dict"
-	write_dict(catname,tile_char)
+	write_dict(tiledef[tile_px]["CATNAME"],tile_char)
 
 def return_final_cluster_catalogue(tiledef,verbose=False):
     tile_cluscat={}
     for px in tiledef.keys():
-        tilename=tiledef[px]["TILENAME"]
-        catname=gset.mmfset.paths["result_data"] + tilename + ".dict"
-        temp_cat=read_dict(catname)
+        temp_cat=read_dict(tiledef[px]["CATNAME"])
         tile_cluscat[tilename]=temp_cat["cat"]
 	
     final_cat={}
@@ -197,11 +194,11 @@ def gen_tile_figs(data,theta500,err,cluscat,filename,showplt=False):
 		radius=(snr)*1.5*gset.mmfset.reso/60.
 		circ = Circle((y,x),radius,edgecolor='red', facecolor="none",alpha=0.85,linewidth=0.9)
 		ax1.add_patch(circ)
-#	img1 = ax1.imshow(data/err,vmin=-2,vmax=10.,origin="lower",cmap="cividis",extent=extent)
-	img1 = ax1.imshow(data/err,vmin=-2,vmax=10.,origin="lower",cmap="viridis",extent=extent)
+	img1 = ax1.imshow(data/err,vmin=-2,vmax=10.,origin="lower",cmap="cividis",extent=extent)
+#	img1 = ax1.imshow(data/err,vmin=-2,vmax=10.,origin="lower",cmap="viridis",extent=extent)
 	colorbar(img1)
 	ax1.set_title("Filtered data SNR [ $\sigma=$"+ str(round(err*1e5,3)) + r" ; $\theta_{500}=$" + str(round(theta500)) + "]",fontsize=8)
-	plt.savefig(filename,bbox_inches="tight",dpi=300)
+	plt.savefig(filename,bbox_inches="tight",dpi=100)
 	plt.clf()
 	plt.close()
 
