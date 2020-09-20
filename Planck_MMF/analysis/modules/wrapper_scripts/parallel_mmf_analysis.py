@@ -14,9 +14,9 @@ from data_preprocess import get_tangent_planes as gtp
 from simulate import cluster_templates as cltemp
 from masking import gen_masks as gm
 
-outpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/results/planck_pr1/"
+outpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/results/planck_pr3/"
 #outpath="/nvme/arotti/mmf_dataout/planck_pr1/mmf_blind/"
-gset.setup_mmf_config(dataset="planck_pr1",outpath=outpath,chmin=100.,xsize=10.,result_midfix="",do_band_pass=True)
+gset.setup_mmf_config(dataset="planck_pr3",outpath=outpath,chmin=100.,xsize=10.,result_midfix="",do_band_pass=True)
 tmplt=cltemp.cluster_spectro_spatial_templates(T_step=1.)
 tmplt.setup_templates()
 mmf_cat=ppd.get_tangent_plane_fnames()

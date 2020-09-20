@@ -45,7 +45,7 @@ class multi_matched_filter(object):
 				
 		self.cross_Pk_inv=np.linalg.inv(self.cross_Pk)
 		
-	def get_data_ft(self,data,smwin=5,emask=[]):
+	def get_data_ft(self,data,smwin=5,emask=[],mfcm=[]):
 		self.data_ft=np.zeros((self.numch,self.nxpix,self.nxpix),complex)
 		self.data_ft_cov=np.zeros((self.numch,self.nxpix,self.nxpix),complex)
 		self.cross_Pk=np.zeros((self.totnpix,self.numch,self.numch),np.float64)
@@ -55,10 +55,12 @@ class multi_matched_filter(object):
 		else:
 			bin_mask=np.ones_like(emask)
 			bin_mask[emask<0.99]=0
+		if mfcm==[]:
+			mfcm=np.zeros((self.numch,self.nxpix,self.nxpix),np.float64)
 		for i,ch in enumerate(gset.mmfset.channels):
 			self.data_ft[i,]=fsa.map2alm(data[i,],gset.mmfset.reso)
-			map_mean=np.sum(data[i,])/np.sum(bin_mask)
-			self.data_ft_cov[i,]=fsa.map2alm(data[i,]-map_mean*bin_mask,gset.mmfset.reso)
+			map_mean=np.sum(data[i,]*bin_mask)/np.sum(bin_mask)
+			self.data_ft_cov[i,]=fsa.map2alm(data[i,]-map_mean*bin_mask-mfcm[i,],gset.mmfset.reso)
 			for j in range(i+1):
 				ell,cl=fsa.alm2cl(alm=self.data_ft_cov[i,],almp=self.data_ft_cov[j,],pixel_size=gset.mmfset.reso,smwin=smwin)
 				filtr=fsa.get_fourier_filter(cl,self.nxpix,gset.mmfset.reso,ell=ell)
