@@ -286,7 +286,7 @@ def gen_tile_figs(tilecat,fildata,cluspath,tilename,showplt=False,gengif=False):
 		colorbar(img2)
 		ax2.set_title("Filtered data SNR [ $\sigma=$"+ str(round(tilecat["err_yc_rev"][ith]*1e5,2)) + r"; $\theta_{500}=$" + str(round(thc)) + "]",fontsize=8)
 
-#		plt.tight_layout(h_pad=1)
+		plt.tight_layout(h_pad=1)
 		filename=cluspath + tilename + "_clusdet_iter" + str(ith).zfill(2) + ".jpeg"
 		plt.savefig(filename,bbox_inches="tight",dpi=300)
 		plt.clf()
