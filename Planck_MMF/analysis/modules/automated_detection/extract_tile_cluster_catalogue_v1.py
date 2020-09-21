@@ -24,9 +24,9 @@ def extract_tile_cluster_catalogue(tile_px,tiledef,tmplt,snrthr=4,genfig=False,g
 	'''
 	- Running filter in order of decreasing theta500 is important.
 	'''
-		filename=tiledef[tile_px]["FILENAME"]
-		tilename=tiledef[tile_px]["TILENAME"]
-		ext_ps_mask=gtp.return_ext_ps_mask(filename)
+	filename=tiledef[tile_px]["FILENAME"]
+	tilename=tiledef[tile_px]["TILENAME"]
+	ext_ps_mask=gtp.return_ext_ps_mask(filename)
 	ps_mask=gtp.return_ps_mask(filename)
 	gmask=gtp.return_galactic_mask(filename)
 	ana_mask=gmask*ps_mask*emask ; fsky=np.sum(ana_mask)/np.size(ana_mask)
