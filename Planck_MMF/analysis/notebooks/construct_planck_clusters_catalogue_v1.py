@@ -53,7 +53,7 @@ gset.setup_mmf_config(dataset=dataset,outpath=outpath,tempdatapath=tempdatapath,
 
 figpath=gset.mmfset.paths["result_figs"]
 datapath=gset.mmfset.paths["result_data"]
-logging.basicConfig(filename=figpath + 'extract_planck_cluster_cat.log',level=logging.INFO)
+logging.basicConfig(filename=gset.mmfset.result_path + 'extract_planck_cluster_cat.log',level=logging.INFO)
 
 
 

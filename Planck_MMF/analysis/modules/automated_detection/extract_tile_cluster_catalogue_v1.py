@@ -20,13 +20,13 @@ from read_write_dict import read_dict
 
 emask=gm.return_edge_apodized_mask(edge_width=30.,fwhm=30.)
 
-def extract_tile_cluster_catalogue(tile_px,tiledef,tmplt,snrthr=4,genfig=False,gengif=True):
+def extract_tile_cluster_catalogue(tile_px,tiledef,tmplt,snrthr=4,genfig=False,gengif=True,remove_sz=False):
 	'''
 	- Running filter in order of decreasing theta500 is important.
 	'''
-	filename=tiledef[tile_px]["FILENAME"]
-	tilename=tiledef[tile_px]["TILENAME"]
-	ext_ps_mask=gtp.return_ext_ps_mask(filename)
+		filename=tiledef[tile_px]["FILENAME"]
+		tilename=tiledef[tile_px]["TILENAME"]
+		ext_ps_mask=gtp.return_ext_ps_mask(filename)
 	ps_mask=gtp.return_ps_mask(filename)
 	gmask=gtp.return_galactic_mask(filename)
 	ana_mask=gmask*ps_mask*emask ; fsky=np.sum(ana_mask)/np.size(ana_mask)
@@ -61,7 +61,10 @@ def extract_tile_cluster_catalogue(tile_px,tiledef,tmplt,snrthr=4,genfig=False,g
 
 	# Removing a cluster model and re-running the detection analysis
 	mfcm=return_mf_cluster_model(tile_char["cat"],projop=projop,opmmf=opmmf,snrthr=6.)
-	opmmf.get_data_ft(data,emask=gmask*emask*ps_mask,mfcm=mfcm)
+	if remove_sz:
+		opmmf.get_data_ft((data-mfcm)*ana_mask,emask=gmask*emask*ps_mask,mfcm=mfcm)
+	else:
+		opmmf.get_data_ft(data,emask=gmask*emask*ps_mask,mfcm=mfcm)
 	fildata["iter1"]={} ; tile_char["cat_rev"]={}
 	tile_char["err_yc_rev"]=np.array([]) ; tile_char["err_Y500_rev"]=np.array([])
 	for ith,theta500 in enumerate(tmplt.theta500[::-1]):
@@ -154,9 +157,34 @@ def return_final_cluster_catalogue(tiledef,verbose=False):
 				myprint("New cluster detected, adding to the cluster catalogue",verbose)
 				match_ict=len(final_cat.keys())
 				final_cat[match_ict]=tile_cluscat[tile][ict]
+
+	tile_cluscat={}
+	for px in tiledef.keys():
+		temp_cat=read_dict(tiledef[px]["CATNAME"])
+		tile_cluscat[tiledef[px]["TILENAME"]]=temp_cat["cat_rev"]
+
+	final_cat1={}
+	for tile in tile_cluscat.keys():
+		for ict in tile_cluscat[tile].keys():
+			nc=[]
+			for jct in final_cat.keys():
+				dist=return_distance(tile_cluscat[tile][ict]["mp_gal_coord"],final_cat[jct]["mp_gal_coord"])
+				nc=nc + [dist<tile_cluscat[tile][ict]["mp_thetac"] or dist<final_cat[jct]["mp_thetac"]]
+
+			if any(nc):
+				myprint("This cluster exists in the catalogue",verbose)
+				match_ict=np.where(nc)[0][0]
+				if tile_cluscat[tile][ict]["mp_snr"]>final_cat[match_ict]["mp_snr"]:
+					myprint("Updating the cluster definition",verbose)
+					final_cat1[match_ict]=tile_cluscat[tile][ict]
+			else:
+				myprint("New cluster detected, adding to the cluster catalogue",verbose)
+				match_ict=len(final_cat.keys())
+				final_cat1[match_ict]=tile_cluscat[tile][ict]
+
 	cat_summary={}
-	cat_summary["Total clusters"]=len(final_cat.keys())
 	cat_summary["Catalogue"]=final_cat
+	cat_summary["Catalogue rev"]=final_cat1
 	catname=gset.mmfset.paths["result_data"] + "full_sky_catalogue.dict"
 	write_dict(catname,cat_summary)
 	return cat_summary
@@ -204,18 +232,18 @@ def gen_tile_figs(tilecat,fildata,cluspath,tilename,showplt=False,gengif=False):
 	import matplotlib.pyplot as plt
 	from mpl_toolkits.axes_grid1 import make_axes_locatable
 	from matplotlib.patches import Circle
-	
+
 	plt.ioff()
 	if showplt:
 		plt.ion()
-	
+
 	def colorbar(mappable):
 		ax = mappable.axes
 		fig = ax.figure
 		divider = make_axes_locatable(ax)
 		cax = divider.append_axes("right", size="5%", pad=0.05)
 		return fig.colorbar(mappable, cax=cax)
-	
+
 	ang_dist=gset.mmfset.npix*gset.mmfset.reso/2./60.
 	extent=[-ang_dist,ang_dist,-ang_dist,ang_dist]
 	for ith, thc in enumerate(tilecat["theta500"]):
