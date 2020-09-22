@@ -135,8 +135,11 @@ def return_cluster_cat(data,err,theta500,cluscat,projop,tmplt,snrthr=4,verbose=F
 
 def return_final_cluster_catalogue(tiledef,verbose=False):
 	tile_cluscat={}
+	MMF_info={}
+	excl_keys=["cat","cat_rev","pix"]
 	for px in tiledef.keys():
 		temp_cat=read_dict(tiledef[px]["CATNAME"])
+		MMF_info[temp_cat["pix"]]={kys:temp_cat[kys] for kys in set(temp_cat.keys()) - set(excl_keys)}
 		tile_cluscat[tiledef[px]["TILENAME"]]=temp_cat["cat"]
 
 	final_cat={}
@@ -183,6 +186,7 @@ def return_final_cluster_catalogue(tiledef,verbose=False):
 				final_cat1[match_ict]=tile_cluscat[tile][ict]
 
 	cat_summary={}
+	cat_summary["Tile MMF info"]=MMF_info
 	cat_summary["Catalogue"]=final_cat
 	cat_summary["Catalogue rev"]=final_cat1
 	catname=gset.mmfset.paths["result_data"] + "full_sky_catalogue.dict"
