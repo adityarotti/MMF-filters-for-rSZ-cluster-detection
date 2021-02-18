@@ -59,9 +59,11 @@ class setup_mmf_analysis(object):
 
 		self.mask_planck_maps=True
 		self.mask_tangent_planes=True
-		self.paths["sz_spec"]=os.path.abspath("../modules/simulate/spectral_template/sz_spectra/")
+#		self.paths["sz_spec"]=os.path.abspath("../modules/simulate/spectral_template/sz_spectra/")
+		self.paths["sz_spec"]=os.path.abspath("/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/analysis/modules/simulate/spectral_template/sz_spectra/")
 
-		globaloutpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/"
+#		globaloutpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/"
+		globaloutpath="/Users/adityarotti/Documents/Work/Projects/Relativistic-SZ/MMF-filters-for-rSZ-cluster-detection/Planck_MMF/analysis/notebooks/biases_cnc_analysis/"
 		if "sirius" in hostname:
 			globaloutpath="/scratch/nas_chluba/specdist/arotti/mmf_dataout/"
 

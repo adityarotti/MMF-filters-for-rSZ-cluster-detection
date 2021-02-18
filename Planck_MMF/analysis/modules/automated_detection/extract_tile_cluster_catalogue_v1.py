@@ -113,7 +113,7 @@ def return_cluster_cat(data,err,theta500,cluscat,projop,tmplt,snrthr=4,verbose=F
 			myprint("This cluster exists in the catalogue",verbose)
 			match_ict=np.where(nc)[0][0]
 			mask_center=cluscat[match_ict]["mp_cart_coord"]
-			mask_thetac=cluscat[match_ict]["mp_thetac"]
+			mask_thetac=max(15.,cluscat[match_ict]["mp_thetac"])
 			for key in det_cluster.keys():
 				cluscat[match_ict][key]=cluscat[match_ict][key] + det_cluster[key]
 			if det_cluster["snr"][0]>cluscat[match_ict]["mp_snr"]:
@@ -124,7 +124,7 @@ def return_cluster_cat(data,err,theta500,cluscat,projop,tmplt,snrthr=4,verbose=F
 			myprint("New cluster detected, adding to the cluster catalogue",verbose)
 			match_ict=len(cluscat.keys())
 			mask_center=det_cluster["cart_coord"][0]
-			mask_thetac=det_cluster["thetac"][0]
+			mask_thetac=max(15.,det_cluster["thetac"][0])
 			cluscat[match_ict]=det_cluster
 			for key in det_cluster.keys():
 				cluscat[match_ict]["mp_" + key]=det_cluster[key][0]

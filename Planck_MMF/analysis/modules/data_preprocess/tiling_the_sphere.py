@@ -53,6 +53,7 @@ def return_tile_definition(tilenside=8,fsky_map=[],fsky_thr=0.):
 #	temp_pixnum=temp_pixnum[fsky_map[temp_pixnum]<fsky_thr]
 
 	tiledef={}
+	temp_pixnum=[238]
 	for px in temp_pixnum:
 		tiledef[px]={}
 		tiledef[px]["FSKY"]=fsky_map[px]

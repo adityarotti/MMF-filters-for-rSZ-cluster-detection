@@ -11,11 +11,14 @@ from spatial_template import sim_cluster as sc
 from flat_sky_codes  import flat_sky_analysis as fsa
 
 
-def return_mc_cluster(M500,z,op,y0=1e-4):
+def return_mc_cluster(M500,z,op,y0=1e-4,cold=False):
 	'''Returns multi-frequency simulation of a cluster'''
-	Tc=clcosmo.convert_M500_T500(M500,z)
+	Tc=0.
+	if not(cold):
+		Tc=clcosmo.convert_M500_T500(M500,z)
 	thetac=clcosmo.convert_M500_theta500(M500,z)
 	template=sc.gen_cluster_template(gset.mmfset.npix,thetac,gset.mmfset.reso,y0=y0)
+	yc=max(template.ravel())
 	temp_ft=fsa.map2alm(template,gset.mmfset.reso)
 
 	template_ft=np.zeros((np.size(gset.mmfset.channels),gset.mmfset.npix,gset.mmfset.npix),complex)
@@ -25,4 +28,4 @@ def return_mc_cluster(M500,z,op,y0=1e-4):
 		template_ft[i,:,:]=temp_ft*op.chfiltr[ch]*op.sz_op.fn_sz_2d_T(Tc,ch)
 		cluster[i,:,:]=fsa.alm2map(template_ft[i,:,:],gset.mmfset.reso)
 
-	return cluster,Tc,thetac
+	return cluster,Tc,thetac,yc
